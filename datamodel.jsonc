@@ -1,0 +1,18 @@
+{
+    "timestamp": "DateTime",
+    "level": "TRACE/DEBUG/.../ERROR",
+    "microservice_id": "String", //name let's say
+    "operation_type": "VIEW/BUY/CANCEL/REFUND",
+    "operation_id": "UUID",
+    "user_id": "UUID",
+    "message": "Arbitrary string"
+}
+
+{
+    "timestamp": "DateTime",
+    "microservice_id": "String",
+    "event_type": "GET/POST or view,buy,cancel,refund, cpu, ram",
+    "operation_id": "UUID",
+    "user_id": "UUID",
+    "value": "Arbitrary value" // exec time, cpu/gpu consumption, retry count
+}
