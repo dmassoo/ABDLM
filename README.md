@@ -9,6 +9,11 @@ docker compose up -d
 building containers will take some time
 If one of custom containers fail - restart it in docker
 
+use the following command to stop containers:
+```
+docker compose down
+```
+
 To see kafka stats go to http://localhost:8080/ in your brouser
 ## Modifications
 
