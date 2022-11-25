@@ -1,2 +1,4 @@
 logs.csv
 metrics.csv
+logs.pickle
+metrics.pickle
