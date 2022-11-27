@@ -14,7 +14,7 @@ topic_name = 'testing'
 
 
 # Wait kafka and cassandra to start
-time.sleep(45)
+time.sleep(60)
 
 # Attach to cassandra
 cluster = Cluster(['my-cassandra'], port=9042)

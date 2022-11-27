@@ -22,6 +22,8 @@ services:
     networks:
       - my-network
     image: vandosik/generator:latest
+    depends_on:
+     - my-kafka
   my-kafka:
     image: 'bitnami/kafka:latest'
     environment:
@@ -51,12 +53,22 @@ services:
       - KAFKA_CLUSTERS_0_NAME=kraft
     networks:
       - my-network
+    depends_on:
+     - my-kafka
   my-cassandra:
     image: cassandra:latest
     volumes:
       - ./cassandra:/cassandra
     networks:
       - my-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 5000M
+        reservations:
+          cpus: '0.5'
+          memory: 4000M
   my-client:
     build: ./client
     links:
@@ -70,4 +82,13 @@ services:
     networks:
       - my-network
     image: vandosik/client:latest
+    depends_on:
+     - my-kafka
+     - my-cassandra
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
 
