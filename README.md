@@ -14,7 +14,8 @@ use the following command to stop containers:
 docker compose down
 ```
 
-To see kafka stats go to http://localhost:8080/ in your brouser
+To see kafka stats go to http://localhost:8081/ in your brouser
+To see spark stats go to http://localhost:8080/ in your brouser
 ## Modifications
 
 To add code you should put it to corresponding _code_ folder. This folder is
@@ -32,6 +33,12 @@ appropriate extensions.
 - __my-client-1__ - container with kafka consumer (reads from kafka and writes to cassandra)
 
 - __my-generator-1__ - generates data and puts it to kafka
+
+- __my-spark-master__ - master spark node
+
+- __my-spark-worker__ - worker spark node
+
+- __my_spark-client__ - client that reads from kafka via spark interface
 
 
 
