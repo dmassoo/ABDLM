@@ -1,14 +1,20 @@
 import kafka
 # from kafka import KafkaProducer
 import time
+import json
+from parallel_data_generator import metrics_logs_generator
 
 # TODO: work with logs printing
+def serialize(data):
+    for r in data:
+        for k in r:
+            yield (json.dumps(k), "utf-8")
 
 bootstrap_servers = ['my-kafka:9092']
 
 def attach_producer() -> kafka.KafkaProducer:
     try:
-        producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers, value_serializer=str.encode)
+        producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers, value_serializer=serialize)
         print("Success: Attached to kafka broker")
         return producer
     except kafka.errors.NoBrokersAvailable:
@@ -38,14 +44,22 @@ if producer == None:
     exit(1)
 
 iterations = 1000
-topic_name = 'testing'
+topic_metrics = 'metrics'
+topic_logs = 'logs'
 time_wait = 1
 
-for i in range(iterations):
-    value = str(i)
-    print("sending value = " + value)
-    producer.send(topic=topic_name, value=value)
-    time.sleep(time_wait)
+# for i in range(iterations):
+#     value = str(i)
+#     print("sending value = " + value)
+#     producer.send(topic=topic_name, value=value)
+#     time.sleep(time_wait)
 
+while True:
+    metrics = metrics_logs_generator()[0]
+    logs = metrics_logs_generator()[1]
+    # print("sending value = " + value)
+    producer.send(topic=topic_metrics, value=metrics)
+    producer.send(topic=topic_logs, value=logs)
+    time.sleep(time_wait)
 
 

@@ -1,6 +1,7 @@
 import kafka
 # from kafka import KafkaConsumer
 import time
+import json
 from cassandra.cluster import Cluster
 
 
@@ -8,7 +9,8 @@ from cassandra.cluster import Cluster
 bootstrap_servers = ['my-kafka:9092']
 
 # Define topic name from where the message will recieve
-topic_name = 'testing'
+topic_metrics = 'metrics'
+topic_logs = 'logs'
 
 
 
@@ -34,8 +36,19 @@ CREATE TABLE testing_ks.some_table (
  PRIMARY KEY(id)
 );""")
 
+
+def forgiving_json_deserializer(v):
+    if v is None:
+        return
+    try:
+        return json.loads(v.decode('utf-8'))
+    except json.decoder.JSONDecodeError:
+        log.exception('Unable to decode: %s', v)
+        return None
 # Initialize consumer variable
-consumer = kafka.KafkaConsumer(topic_name, group_id='my-group', bootstrap_servers = bootstrap_servers)
+consumer = kafka.KafkaConsumer(topic_metrics, group_id='my-group', bootstrap_servers = bootstrap_servers,
+value_deserializer=forgiving_json_deserializer)
+consumer1 = kafka.KafkaConsumer(topic_logs, group_id='my-group', bootstrap_servers = bootstrap_servers)
 
 # Read and print message from consumer
 for msg in consumer:
@@ -45,4 +58,6 @@ for msg in consumer:
     # Print all the rows
     row = session.execute("""select * from testing_ks.some_table""")[-1]
     print(row)
+
+
 

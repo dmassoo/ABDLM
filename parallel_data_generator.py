@@ -8,6 +8,8 @@ import marshal
 from types import FunctionType
 import pickle
 import time
+import multiprocessing
+import json
 
 MICROSERVICE_ID = ['e8372c50-1678-4987-8105-966238974c4e',
 'ef7119e1-d772-421b-99c1-c3cb3105ace9',
@@ -142,11 +144,11 @@ def dos_metrics_logs_per_one(user):
         user_metrics.append(metrics)
     return [user_metrics, user_logs]
 
-if __name__ == "__main__":
+def metrics_logs_generator():
     metrics = []
     logs = []
-    pool    = Pool(processes=simultaneous_users)
-    for _ in tqdm(range(100)):
+    pool    = Pool(processes=multiprocessing.cpu_count())
+    for _ in tqdm(range(3)):
         random = default_rng().uniform(size=1)
         if random < 0.99:
             users = choice(user_db, 50)
@@ -165,17 +167,15 @@ if __name__ == "__main__":
         for r in result:
             metrics.append(r.get()[0])
             logs.append(r.get()[1])
-            #print('Metrics \t', pd.DataFrame(r.get()[0]))
-            # print('Logs \t', r.get()[1])
+    return metrics, logs
 
-    with open('metrics.pickle', 'wb') as handle:
-        pickle.dump(metrics, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# def serialize(data):
+#     for r in data:
+#         for k in r:
+#             yield (json.dumps(k), "utf-8")
 
-    with open('logs.pickle', 'wb') as handle:
-        pickle.dump(logs, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    
-    # metrics = pd.DataFrame.from_dict(metrics)
-    # logs = pd.DataFrame.from_dict(logs)
-    # metrics.to_csv('metrics.csv')
-    # logs.to_csv('logs.csv')
+# if __name__ == "__main__":
+#     series = serialize(metrics_logs_generator()[0])
+#     for ss in series:
+#         print(ss)
 
