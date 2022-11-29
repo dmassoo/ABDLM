@@ -2,7 +2,6 @@ from numpy.random import choice, randint, default_rng
 import uuid
 from datetime import datetime, timezone
 from tqdm import tqdm
-import pandas as pd
 from multiprocessing import Pool
 import marshal
 from types import FunctionType
