@@ -6,15 +6,17 @@ from parallel_data_generator import metrics_logs_generator
 
 # TODO: work with logs printing
 def serialize(data):
-    for r in data:
-        for k in r:
-            yield bytes(json.dumps(k), "utf-8")
+    # for r in data:
+    #     for k in r:
+    #         return bytes(json.dumps(k), "utf-8")
+    
+    return bytes(data)
 
 bootstrap_servers = ['my-kafka:9092']
 
 def attach_producer() -> kafka.KafkaProducer:
     try:
-        producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers, value_serializer=serialize)
+        producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers, value_serializer=serialize,  compression_type = 'gzip')
         print("Success: Attached to kafka broker")
         return producer
     except kafka.errors.NoBrokersAvailable:
