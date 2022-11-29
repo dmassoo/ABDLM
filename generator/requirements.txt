@@ -1,2 +1,6 @@
 kafka-python
+numpy
+datetime
+tqdm
+pandas
 # pyspark
