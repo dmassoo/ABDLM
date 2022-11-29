@@ -15,7 +15,7 @@ packages = [
 
 spark = SparkSession.builder\
     .master("spark://my-spark-master:7077")\
-    .appName("kafka-example")\
+    .appName("kafka-log-spark")\
     .config("spark.jars.packages", ",".join(packages))\
     .getOrCreate()
 

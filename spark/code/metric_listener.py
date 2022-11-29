@@ -15,7 +15,7 @@ packages = [
 
 spark = SparkSession.builder\
     .master("spark://my-spark-master:7077")\
-    .appName("kafka-example")\
+    .appName("kafka-metric-spark")\
     .config("spark.jars.packages", ",".join(packages))\
     .getOrCreate()
 
