@@ -2,14 +2,11 @@ from numpy.random import choice, randint, default_rng
 import uuid
 from datetime import datetime, timezone
 from tqdm import tqdm
-import pandas as pd
 from multiprocessing import Pool
 import marshal
 from types import FunctionType
-import pickle
 import time
 import multiprocessing
-import json
 
 MICROSERVICE_ID = ['e8372c50-1678-4987-8105-966238974c4e',
 'ef7119e1-d772-421b-99c1-c3cb3105ace9',

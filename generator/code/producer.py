@@ -8,7 +8,7 @@ from parallel_data_generator import metrics_logs_generator
 def serialize(data):
     for r in data:
         for k in r:
-            yield (json.dumps(k), "utf-8")
+            yield bytes(json.dumps(k), "utf-8")
 
 bootstrap_servers = ['my-kafka:9092']
 
@@ -58,8 +58,10 @@ while True:
     metrics = metrics_logs_generator()[0]
     logs = metrics_logs_generator()[1]
     # print("sending value = " + value)
-    producer.send(topic=topic_metrics, value=metrics)
+    res = producer.send(topic=topic_metrics, value=metrics)
+    msg = res.get(timeout=1)
     producer.send(topic=topic_logs, value=logs)
+    print(f""" [+] message_metadata: {msg.topic}, partition: {msg.partition}, offset: {msg.offset}""")
     time.sleep(time_wait)
 
 
