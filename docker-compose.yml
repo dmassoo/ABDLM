@@ -116,6 +116,9 @@ services:
       - SPARK_SSL_ENABLED=no
     networks:
       - my-network
+    deploy:
+      mode: replicated
+      replicas: 2
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
@@ -133,5 +136,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 60s
+
 
 
