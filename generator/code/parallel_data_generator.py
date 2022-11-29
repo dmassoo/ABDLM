@@ -13,12 +13,11 @@ import json
 MICROSERVICE_ID = ['e8372c50-1678-4987-8105-966238974c4e',
 'ef7119e1-d772-421b-99c1-c3cb3105ace9',
 'ac727270-0142-4b09-a487-de57a9bf803d', '29498e6f-adc2-4830-8b53-ffaf9a6ed20c']
-EVENT_TYPE = ['VIEW', 'TRANSACTION', 'CPU', 'RAM']
-operation_type = ['VIEW', 'BUY', 'CANCEL', 'REFUND']
+EVENT_TYPE = ['VIEW', 'TRANSACTION', 'CPU', 'RAM', 'BUY', 'CANCEL', 'REFUND']
 LEVEL = ['TRACE', 'DEBUG', 'ERROR']
-OPERATION_TYPE = operation_type
-OPERATION_TYPE.append('GET')
-OPERATION_TYPE.append('POST')
+OPERATION_TYPE = ['VIEW', 'BUY', 'CANCEL', 'REFUND']
+# OPERATION_TYPE.append('GET')
+# OPERATION_TYPE.append('POST')
 simultaneous_users = 12
 average_time_in_site = 6 #sec
 potencial_users = 10000
@@ -89,24 +88,24 @@ def common_metrics_logs_per_one(user):
     for _ in range(randint(1, 30)):
         time.sleep(0.05)
         dt_now=datetime.now().replace(tzinfo=timezone.utc).timestamp()
-        
+        tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
+
+
         logs = {}
-        logs['timestamp'] = dt_now
+        logs['timestamp'] = tmp_hueta
         logs['level'] = choice(LEVEL)
         logs['microservice_id'] = choice(MICROSERVICE_ID)
-        logs['operation_type'] = choice(operation_type)
+        logs['operation_type'] = choice(OPERATION_TYPE)
         logs['action_id'] = choice(action_ids)
         logs['user_id'] = user
-        logs['attack'] = 0
 
         metrics = {}
-        metrics['timestamp'] = dt_now
+        metrics['timestamp'] = tmp_hueta
         metrics['microservice_id'] = choice(MICROSERVICE_ID)
-        metrics['operation_type'] = choice(OPERATION_TYPE)
+        metrics['operation_type'] = choice(EVENT_TYPE)
         metrics['action_id'] = choice(action_ids)
         metrics['user_id'] = user
         metrics['value'] = randint(1, 2)
-        metrics['attack'] = 0
         
         user_logs.append(logs)
         user_metrics.append(metrics)
@@ -120,24 +119,23 @@ def dos_metrics_logs_per_one(user):
     # user = choice(user_db)
     for _ in range(randint(300, 600)):
         dt_now=datetime.now().replace(tzinfo=timezone.utc).timestamp()
+        tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
         
         logs = {}
-        logs['timestamp'] = dt_now
+        logs['timestamp'] = tmp_hueta
         logs['level'] = choice(LEVEL)
         logs['microservice_id'] = choice(MICROSERVICE_ID)
-        logs['operation_type'] = choice(operation_type)
+        logs['operation_type'] = choice(OPERATION_TYPE)
         logs['action_id'] = choice(action_ids)
         logs['user_id'] = user
-        logs['attack'] = 1
 
         metrics = {}
-        metrics['timestamp'] = dt_now
+        metrics['timestamp'] = tmp_hueta
         metrics['microservice_id'] = choice(MICROSERVICE_ID)
-        metrics['operation_type'] = choice(OPERATION_TYPE)
+        metrics['operation_type'] = choice(EVENT_TYPE)
         metrics['action_id'] = choice(action_ids)
         metrics['user_id'] = user
         metrics['value'] = randint(1, 2)
-        metrics['attack'] = 1
         
         user_logs.append(logs)
         user_metrics.append(metrics)

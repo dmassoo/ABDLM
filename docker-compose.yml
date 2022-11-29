@@ -118,8 +118,8 @@ services:
       - my-network
   my-spark-client:
     build: ./spark
-    image: vandosik/spark-worker:latest
-    command: python /code/spark_listener.py
+    image: vandosik/spark-client:latest
+    command: bash -c /code/start_listeners.sh
     networks:
       - my-network
     volumes:
