@@ -281,3 +281,10 @@ kafka/data/metrics-0/00000000000000000000.timeindex
 kafka/data/metrics-0/leader-epoch-checkpoint
 kafka/data/metrics-0/partition.metadata
 kafka/data/testing-0/00000000000000001000.snapshot
+kafka/data/.kafka_cleanshutdown
+kafka/data/__cluster_metadata-0/00000000000000023366.snapshot
+kafka/data/__consumer_offsets-12/00000000000000002182.snapshot
+kafka/data/__consumer_offsets-23/00000000000000000001.snapshot
+kafka/data/__consumer_offsets-38/00000000000000000003.snapshot
+kafka/data/__consumer_offsets-39/00000000000000000003.snapshot
+kafka/data/__consumer_offsets-40/00000000000000000003.snapshot
