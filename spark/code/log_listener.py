@@ -4,7 +4,7 @@ from pyspark.sql.types import *
 import time
 
 # Wait kafka and spark to start
-time.sleep(60)
+time.sleep(15)
 
 scala_version = '2.12'
 spark_version = '3.3.1'
