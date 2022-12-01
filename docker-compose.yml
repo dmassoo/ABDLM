@@ -158,12 +158,12 @@ services:
         delay: 5s
         max_attempts: 3
         window: 60s
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.2'
-          memory: 256M
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.2'
+#          memory: 256M
 
 
