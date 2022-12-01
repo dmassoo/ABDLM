@@ -9,8 +9,8 @@ def serialize(data):
     # for r in data:
     #     for k in r:
     #         return bytes(json.dumps(k), "utf-8")
-    
-    return bytes(data)
+    print(len(data))
+    return bytes(data[0])
 
 bootstrap_servers = ['my-kafka:9092']
 

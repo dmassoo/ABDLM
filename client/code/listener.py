@@ -45,6 +45,7 @@ def forgiving_json_deserializer(v):
     except json.decoder.JSONDecodeError:
         log.exception('Unable to decode: %s', v)
         return None
+        
 # Initialize consumer variable
 consumer = kafka.KafkaConsumer(topic_metrics, group_id='my-group', bootstrap_servers = bootstrap_servers,
 value_deserializer=forgiving_json_deserializer)
