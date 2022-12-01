@@ -47,7 +47,7 @@ services:
   my-ui:
     image: provectuslabs/kafka-ui:v0.4.0
     ports:
-      - "8081:8080"
+      - "9090:8080"
     environment:
       - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=my-kafka:9092
       - KAFKA_CLUSTERS_0_NAME=kraft
@@ -73,10 +73,10 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 3000M
+          memory: 5000M
         reservations:
           cpus: '0.5'
-          memory: 2000M
+          memory: 4000M
   # my-client:
   #   build: ./client
   #   links:
@@ -126,7 +126,9 @@ services:
       - my-network
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
+    ports:
+    - '8081:8081'
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
