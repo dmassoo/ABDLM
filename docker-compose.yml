@@ -69,28 +69,28 @@ services:
         reservations:
           cpus: '0.5'
           memory: 4000M
-  my-client:
-    build: ./client
-    links:
-      - my-kafka
-    command: bash -c "python listener.py"
-    #https://stackoverflow.com/questions/36249744/interactive-shell-using-docker-compose
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    volumes:
-      - ./client/code:/code
-    networks:
-      - my-network
-    image: vandosik/client:latest
-    depends_on:
-     - my-kafka
-     - my-cassandra
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 60s
+  # my-client:
+  #   build: ./client
+  #   links:
+  #     - my-kafka
+  #   command: bash -c "python listener.py"
+  #   #https://stackoverflow.com/questions/36249744/interactive-shell-using-docker-compose
+  #   stdin_open: true # docker run -i
+  #   tty: true        # docker run -t
+  #   volumes:
+  #     - ./client/code:/code
+  #   networks:
+  #     - my-network
+  #   image: vandosik/client:latest
+  #   depends_on:
+  #    - my-kafka
+  #    - my-cassandra
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #       delay: 5s
+  #       max_attempts: 3
+  #       window: 60s
   my-spark-master:
     image: bitnami/spark:latest
     environment:
@@ -116,10 +116,13 @@ services:
       - SPARK_SSL_ENABLED=no
     networks:
       - my-network
+    deploy:
+      mode: replicated
+      replicas: 2
   my-spark-client:
     build: ./spark
-    image: vandosik/spark-worker:latest
-    command: python /code/spark_listener.py
+    image: vandosik/spark-client:latest
+    command: bash -c /code/start_listeners.sh
     networks:
       - my-network
     volumes:
