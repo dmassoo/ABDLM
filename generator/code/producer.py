@@ -8,9 +8,11 @@ import itertools
 
 # TODO: work with logs printing
 def serialize(data):
-    for r in data:
-        for k in r:
-            yield (json.dumps(k), "utf-8")
+    # for r in data:
+    #     for k in r:
+    #         return bytes(json.dumps(k), "utf-8")
+    
+    return bytes(data)
 
 bootstrap_servers = ['my-kafka:9092']
 
