@@ -147,7 +147,7 @@ services:
   jupyter-notebook:
     ports:
       - '8888:8888'
-    image: jupyter/minimal-notebook:latest
+    image: jupyter/pyspark-notebook:latest
     networks:
       - my-network
     links:
