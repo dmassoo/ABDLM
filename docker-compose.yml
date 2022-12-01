@@ -55,6 +55,14 @@ services:
       - my-network
     depends_on:
      - my-kafka
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
   my-cassandra:
     image: cassandra:latest
     volumes:
@@ -65,10 +73,10 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 5000M
+          memory: 3000M
         reservations:
           cpus: '0.5'
-          memory: 4000M
+          memory: 2000M
   # my-client:
   #   build: ./client
   #   links:
@@ -136,5 +144,26 @@ services:
         delay: 5s
         max_attempts: 3
         window: 60s
+  jupyter-notebook:
+    ports:
+      - '8888:8888'
+    image: jupyter/minimal-notebook:latest
+    networks:
+      - my-network
+    links:
+      - my-spark-master
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
 
 
