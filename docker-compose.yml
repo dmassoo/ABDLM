@@ -140,6 +140,7 @@ services:
     links:
       - my-spark-master
       - my-kafka
+      - my-cassandra
     deploy:
       restart_policy:
         condition: on-failure
