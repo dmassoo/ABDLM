@@ -47,7 +47,7 @@ services:
   my-ui:
     image: provectuslabs/kafka-ui:v0.4.0
     ports:
-      - "8081:8080"
+      - "9090:8080"
     environment:
       - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=my-kafka:9092
       - KAFKA_CLUSTERS_0_NAME=kraft
@@ -55,6 +55,14 @@ services:
       - my-network
     depends_on:
      - my-kafka
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
   my-cassandra:
     image: cassandra:latest
     volumes:
@@ -101,6 +109,7 @@ services:
       - SPARK_SSL_ENABLED=no
     ports:
       - '8080:8080'
+      - '7077:7077'
     networks:
       - my-network
   my-spark-worker:
@@ -118,11 +127,13 @@ services:
       - my-network
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
+    ports:
+    - '8081:8081'
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /code/start_listeners.sh
+    command: bash -c /code/submit_logs_listener.sh
     networks:
       - my-network
     volumes:
@@ -130,11 +141,33 @@ services:
     links:
       - my-spark-master
       - my-kafka
+      - my-cassandra
     deploy:
       restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 60s
+  jupyter-notebook:
+    ports:
+      - '8888:8888'
+    image: jupyter/pyspark-notebook:latest
+    networks:
+      - my-network
+    links:
+      - my-spark-master
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.2'
+#          memory: 256M
 
 
