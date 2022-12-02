@@ -36,11 +36,8 @@ spark_version = '3.3.1'
 packages = [
     f'org.apache.spark:spark-sql-kafka-0-10_{scala_version}:{spark_version}',
     'org.apache.kafka:kafka-clients:3.3.1',
-    'com.datastax.spark:spark-cassandra-connector_2.12:3.1.0'
+    f'com.datastax.spark:spark-cassandra-connector_{scala_version}:{spark_version}'
 ]
-# cluster_seeds = ['node1.local', 'node2.local']
-# spark = SparkSession.builder.appName('Spark Cassandra example') \
-#     .config('spark.cassandra.connection.host', ','.join(cluster_seeds)).getOrCreate()
 
 spark = SparkSession.builder\
     .master("spark://my-spark-master:7077")\
@@ -91,6 +88,7 @@ query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
             .format("org.apache.spark.sql.cassandra")\
             .option("keyspace", "metrics")\
             .option("table", "data_table")\
+            .trigger(processingTime='10 seconds') \
             .start()\
             .awaitTermination()
 
