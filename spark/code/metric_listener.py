@@ -13,9 +13,9 @@ cluster = Cluster(['my-cassandra'], port=9042)
 session = cluster.connect()
 
 # Initialize keyspace abd table
-session.execute(f"create ${ccfg.keyspace} IF NOT EXISTS metrics with replication = "
+session.execute(f"create keyspace IF NOT EXISTS {ccfg.keyspace} with replication = "
                 "{'class' : 'SimpleStrategy', 'replication_factor':1}")
-session.execute(f"use ${ccfg.keyspace}")
+session.execute(f"use {ccfg.keyspace}")
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS metrics (
