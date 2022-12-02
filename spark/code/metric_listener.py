@@ -32,9 +32,9 @@ CREATE TABLE IF NOT EXISTS metrics (
 scala_version = '2.12'
 spark_version = '3.3.1'
 packages = [
-    f'org.apache.spark:spark-sql-kafka-0-10_{scala_version}:{spark_version}',
+    f'org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1',
     'org.apache.kafka:kafka-clients:3.3.1',
-    f'com.datastax.spark:spark-cassandra-connector_connector_2.12:3.1.0'
+    'com.datastax.spark:spark-cassandra-connector_connector_2.12:3.1.0'
 ]
 
 spark = SparkSession.builder\
