@@ -17,6 +17,8 @@ session.execute(f"create keyspace IF NOT EXISTS {ccfg.keyspace} with replication
                 "{'class' : 'SimpleStrategy', 'replication_factor':1}")
 session.execute(f"use {ccfg.keyspace}")
 
+topic = 'metrics'
+
 session.execute("""
 CREATE TABLE IF NOT EXISTS metrics (
  timestamp timestamp,
@@ -47,8 +49,6 @@ spark = SparkSession.builder\
 
 print(spark)
 
-topic = 'metrics'
-
 
 kafkaDF = spark \
             .readStream \
@@ -76,9 +76,9 @@ query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
             .option("checkpointLocation", '/code/checkpoints/')\
             .format("org.apache.spark.sql.cassandra")\
             .option("keyspace", ccfg.keyspace)\
-            .option("table", "metrics")\
+            .option("table", topic)\
             .trigger(processingTime='10 seconds') \
             .start()\
             .awaitTermination()
 
-print("OCHKO")
+print("METRICS FINISH")

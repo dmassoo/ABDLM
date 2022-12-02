@@ -133,7 +133,7 @@ services:
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /code/submit_command.sh
+    command: bash -c /code/submit_logs_listener.sh
     networks:
       - my-network
     volumes:
