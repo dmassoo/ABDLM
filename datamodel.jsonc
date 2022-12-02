@@ -1,18 +1,34 @@
+//logs
 {
     "timestamp": "DateTime",
-    "level": "TRACE/DEBUG/.../ERROR",
-    "microservice_id": "String", //name let's say
-    "operation_type": "VIEW/BUY/CANCEL/REFUND",
+    "level": "['TRACE', 'DEBUG', 'ERROR']",
+    "microservice_id": "['e8372c50-1678-4987-8105-966238974c4e',
+    'ef7119e1-d772-421b-99c1-c3cb3105ace9',
+    'ac727270-0142-4b09-a487-de57a9bf803d', '29498e6f-adc2-4830-8b53-ffaf9a6ed20c']",
+    "operation_type": "['VIEW', 'BUY', 'CANCEL', 'REFUND']",
     "operation_id": "UUID",
     "user_id": "UUID",
-    "message": "Arbitrary string"
 }
 
+//metrics
 {
     "timestamp": "DateTime",
-    "microservice_id": "String",
-    "event_type": "GET/POST or view,buy,cancel,refund, cpu, ram",
+    "microservice_id": "['e8372c50-1678-4987-8105-966238974c4e',
+    'ef7119e1-d772-421b-99c1-c3cb3105ace9',
+    'ac727270-0142-4b09-a487-de57a9bf803d', '29498e6f-adc2-4830-8b53-ffaf9a6ed20c']",
+    "event_type": "['VIEW', 'TRANSACTION', 'BUY', 'CANCEL', 'REFUND']",
     "operation_id": "UUID",
     "user_id": "UUID",
-    "value": "Arbitrary value" // exec time, cpu/gpu consumption, retry count
+}
+
+//Recources
+{
+    {
+        "timestamp": "DateTime",
+        "microservice_id": "['e8372c50-1678-4987-8105-966238974c4e',
+        'ef7119e1-d772-421b-99c1-c3cb3105ace9',
+        'ac727270-0142-4b09-a487-de57a9bf803d', '29498e6f-adc2-4830-8b53-ffaf9a6ed20c']",
+        "CPU": "[50-100]",//%
+        "RAM": "[500-8000]",//Mb
+    } 
 }
