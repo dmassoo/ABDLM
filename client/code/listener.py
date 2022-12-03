@@ -11,6 +11,7 @@ bootstrap_servers = ['my-kafka:9092']
 # Define topic name from where the message will recieve
 topic_metrics = 'metrics'
 topic_logs = 'logs'
+topic_resources = 'resources'
 
 
 
@@ -49,6 +50,8 @@ def forgiving_json_deserializer(v):
 consumer = kafka.KafkaConsumer(topic_metrics, group_id='my-group', bootstrap_servers = bootstrap_servers,
 value_deserializer=forgiving_json_deserializer)
 consumer1 = kafka.KafkaConsumer(topic_logs, group_id='my-group', bootstrap_servers = bootstrap_servers)
+consumer2 = kafka.KafkaConsumer(topic_resources, group_id='my-group', bootstrap_servers = bootstrap_servers)
+
 
 # Read and print message from consumer
 for msg in consumer:

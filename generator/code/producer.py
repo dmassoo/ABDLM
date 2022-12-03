@@ -3,7 +3,7 @@ import kafka
 import time
 from tqdm import tqdm
 import json
-from parallel_data_generator import metrics_logs_generator
+from parallel_data_generator import metrics_logs_generator, resources
 import itertools
 
 # TODO: work with logs printing
@@ -50,14 +50,16 @@ if producer == None:
 iterations = 1000
 topic_metrics = 'metrics'
 topic_logs = 'logs'
+topic_resources = 'resources'
 time_wait = 1
 
 while True:
     metrics = metrics_logs_generator()[0]
     logs = metrics_logs_generator()[1]
-    # print("sending value = " + value)
+    resorce = resources()
     producer.send(topic=topic_metrics, value=metrics)
     producer.send(topic=topic_logs, value=logs)
+    producer.send(topic=topic_resources, value=resorce)
     time.sleep(time_wait)
 
 

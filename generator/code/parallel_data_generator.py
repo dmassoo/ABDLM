@@ -144,6 +144,7 @@ def common_metrics_logs_per_one(user):
     return [user_metrics, user_logs]
 
 
+
 def dos_metrics_logs_per_one(user):
     user_metrics = []
     user_logs = []
@@ -172,6 +173,19 @@ def dos_metrics_logs_per_one(user):
         user_logs.append(logs)
         user_metrics.append(metrics)
     return [user_metrics, user_logs]
+
+def resources():
+    resource = []
+    dt_now=datetime.now().replace(tzinfo=timezone.utc).timestamp()
+    tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
+    for i in MICROSERVICE_ID:
+        tmp = {}
+        tmp['timestamp'] = tmp_hueta
+        tmp['microservice_id'] = i
+        tmp['CPU'] = randint(50, 100)
+        tmp['RAM'] = randint(500, 8000)
+        resource.append(tmp)
+    return resource
 
 def metrics_logs_generator():
     metrics = []
