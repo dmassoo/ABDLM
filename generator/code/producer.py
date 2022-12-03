@@ -8,15 +8,17 @@ import itertools
 
 bootstrap_servers = ['my-kafka:9092']
 
+
 def attach_producer() -> kafka.KafkaProducer:
     try:
         producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers,
-                                       value_serializer=lambda item:json.dumps(item).encode('utf8'))
+                                       value_serializer=lambda item: json.dumps(item).encode('utf8'))
         print("Success: Attached to kafka broker")
         return producer
     except kafka.errors.NoBrokersAvailable:
         print("Failure: Kafka broker is anavailable")
         return None
+
 
 max_attempts = 5
 retry_time = 15
@@ -34,7 +36,6 @@ for attempt in range(max_attempts):
 
     time.sleep(retry_time)
     print("Retry attaching")
-
 
 if producer == None:
     print("Sasat")
