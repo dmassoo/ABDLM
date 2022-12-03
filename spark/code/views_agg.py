@@ -68,7 +68,7 @@ views.printSchema()
 
 v2 = views \
     .select("timestamp") \
-    .filter(views.t.operation_type == "VIEW") \
+    .filter(col("operation_type") == "VIEW") \
     .groupBy(
         window("timestamp", "15 minutes")
     ) \
