@@ -3,7 +3,7 @@ from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from cassandra.cluster import Cluster
 import time
-import amdlm_cassandra_configs as ccfg
+import abdlm_cassandra_configs as ccfg
 # Wait kafka and spark to start
 time.sleep(15)
 
