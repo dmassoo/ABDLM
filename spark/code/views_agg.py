@@ -36,7 +36,7 @@ packages = [
 
 spark = SparkSession.builder \
     .master("spark://my-spark-master:7077") \
-    .appName("kafka-metric-spark") \
+    .appName("Views Application") \
     .config("spark.jars.packages", ",".join(packages)) \
     .config('spark.cassandra.connection.host', ','.join(ccfg.cassandra_nodes)) \
     .getOrCreate()
@@ -51,19 +51,34 @@ kafkaDF = spark \
     .load() \
     .selectExpr("CAST(value AS STRING)")
 
+print('printing kafka df')
+kafkaDF.printSchema()
 table = 'views'
-views = kafkaDF.select(from_json(col("value"), ccfg.metricsSchema).alias("t")) \
-    .select("t.timestamp", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id", "t.value") \
-    .withWatermark("timestamp", "15 minutes") \
-    .where("t.operation_type == 'VIEW'") \
-    .groupBy(window("t.timestamp", "15 minutes"), min('t.timestamp'), count().alias('views')) \
-    .writeStream \
-    .option("checkpointLocation", '/code/checkpoints/') \
-    .format("org.apache.spark.sql.cassandra") \
-    .option("keyspace", ccfg.keyspace) \
-    .option("table", table) \
-    .trigger(processingTime='10 seconds') \
-    .start() \
-    .awaitTermination()
 
 
+# .withWatermark("timestamp", "15 minutes") \
+views = kafkaDF \
+    .select(from_json(col("value"), ccfg.metricsSchema).alias('t'))
+
+print('printing kafka df typed')
+views.printSchema()
+
+
+v2 = views \
+    .select("t.timestamp") \
+    .filter(str.upper(views.t.operation_type) == "VIEW") \
+    .groupBy(
+        window(views.t.timestamp, "15 minutes")
+    ) \
+    .count() \
+
+v2.printSchema()
+v2.show()
+    # .writeStream \
+    # .option("checkpointLocation", '/code/checkpoints/') \
+    # .format("org.apache.spark.sql.cassandra") \
+    # .option("keyspace", ccfg.keyspace) \
+    # .option("table", table) \
+    # .trigger(processingTime='15 seconds') \
+    # .start() \
+    # .awaitTermination()
