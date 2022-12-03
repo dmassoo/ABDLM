@@ -72,16 +72,11 @@ v2 = views \
     .groupBy(
         window("timestamp", "15 minutes")
     ) \
-    .count() \
-    .writeStream \
-    .format("console") \
+    .agg(count()).alias("views") \
+    .option("checkpointLocation", '/code/checkpoints/') \
+    .format("org.apache.spark.sql.cassandra") \
+    .option("keyspace", ccfg.keyspace) \
+    .option("table", table) \
+    .trigger(processingTime='15 seconds') \
     .start() \
     .awaitTermination()
-    # .writeStream \
-    # .option("checkpointLocation", '/code/checkpoints/') \
-    # .format("org.apache.spark.sql.cassandra") \
-    # .option("keyspace", ccfg.keyspace) \
-    # .option("table", table) \
-    # .trigger(processingTime='15 seconds') \
-    # .start() \
-    # .awaitTermination()
