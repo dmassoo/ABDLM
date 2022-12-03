@@ -73,6 +73,8 @@ v2 = views \
         window("timestamp", "15 minutes")
     ) \
     .agg(count()).alias("views") \
+    .select("views", "window.*") \
+    .select(col("start").alias("timestamp"), "views") \
     .option("checkpointLocation", '/code/checkpoints/') \
     .format("org.apache.spark.sql.cassandra") \
     .option("keyspace", ccfg.keyspace) \
