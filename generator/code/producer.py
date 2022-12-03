@@ -6,19 +6,12 @@ import json
 from parallel_data_generator import metrics_logs_generator, resources
 import itertools
 
-# TODO: work with logs printing
-def serialize(data):
-    # for r in data:
-    #     for k in r:
-    #         return bytes(json.dumps(k), "utf-8")
-    
-    return bytes(data)
-
 bootstrap_servers = ['my-kafka:9092']
 
 def attach_producer() -> kafka.KafkaProducer:
     try:
-        producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers, value_serializer=serialize)
+        producer = kafka.KafkaProducer(bootstrap_servers=bootstrap_servers,
+                                       value_serializer=lambda item:json.dumps(item).encode('utf8'))
         print("Success: Attached to kafka broker")
         return producer
     except kafka.errors.NoBrokersAvailable:
@@ -54,12 +47,11 @@ topic_resources = 'resources'
 time_wait = 1
 
 while True:
-    metrics = metrics_logs_generator()[0]
-    logs = metrics_logs_generator()[1]
-    resorce = resources()
-    producer.send(topic=topic_metrics, value=metrics)
-    producer.send(topic=topic_logs, value=logs)
-    producer.send(topic=topic_resources, value=resorce)
-    time.sleep(time_wait)
-
-
+    metrics_logs = metrics_logs_generator()
+    metrics = list(itertools.chain(*metrics_logs[0]))
+    logs = list(itertools.chain(*metrics_logs[1]))
+    for i in tqdm(range(len(metrics))):
+        # print("sending value = " + value)
+        producer.send(topic=topic_metrics, value=metrics[i])
+        producer.send(topic=topic_logs, value=logs[i])
+        producer.send(topic=topic_resources, value=resources())
