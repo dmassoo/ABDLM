@@ -68,15 +68,20 @@ views.printSchema()
 
 v2 = views \
     .select("timestamp") \
-    .filter(views.operation_type == "VIEW") \
+    .filter(col("operation_type") == "VIEW") \
     .groupBy(
         window("timestamp", "15 minutes")
     ) \
-    .agg(count()).alias("views") \
-    .option("checkpointLocation", '/code/checkpoints/') \
-    .format("org.apache.spark.sql.cassandra") \
-    .option("keyspace", ccfg.keyspace) \
-    .option("table", table) \
-    .trigger(processingTime='15 seconds') \
+    .count() \
+    .writeStream \
+    .format("console") \
     .start() \
     .awaitTermination()
+    # .writeStream \
+    # .option("checkpointLocation", '/code/checkpoints/') \
+    # .format("org.apache.spark.sql.cassandra") \
+    # .option("keyspace", ccfg.keyspace) \
+    # .option("table", table) \
+    # .trigger(processingTime='15 seconds') \
+    # .start() \
+    # .awaitTermination()
