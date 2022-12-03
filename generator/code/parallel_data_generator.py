@@ -81,7 +81,7 @@ def user_ddos(number=1):
 def common_metrics_logs_per_one(user):
     user_metrics = []
     user_logs = []
-    action_ids = [str(uuid.uuid4()) for _ in range (simultaneous_operation_id)]
+    action_id = str(uuid.uuid4())
     # user = choice(user_db)
     for _ in range(randint(1, 30)):
         time.sleep(0.5)
@@ -95,7 +95,6 @@ def common_metrics_logs_per_one(user):
         microservice_id = choice(MICROSERVICE_ID)
         logs['microservice_id'] = microservice_id
         logs['operation_type'] = choice(OPERATION_TYPE)
-        action_id = choice(action_ids)
         logs['action_id'] = action_id
         logs['user_id'] = user
 
@@ -148,8 +147,7 @@ def common_metrics_logs_per_one(user):
 def dos_metrics_logs_per_one(user):
     user_metrics = []
     user_logs = []
-    action_ids = [str(uuid.uuid4()) for _ in range (simultaneous_operation_id)]
-    # user = choice(user_db)
+    action_id = str(uuid.uuid4())
     for _ in range(randint(300, 600)):
         dt_now=datetime.now().replace(tzinfo=timezone.utc).timestamp()
         tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
@@ -159,14 +157,14 @@ def dos_metrics_logs_per_one(user):
         logs['level'] = choice(LEVEL)
         logs['microservice_id'] = choice(MICROSERVICE_ID)
         logs['operation_type'] = choice(OPERATION_TYPE)
-        logs['action_id'] = choice(action_ids)
+        logs['action_id'] = action_id
         logs['user_id'] = user
 
         metrics = {}
         metrics['timestamp'] = tmp_hueta
         metrics['microservice_id'] = choice(MICROSERVICE_ID)
         metrics['operation_type'] = choice(EVENT_TYPE)
-        metrics['action_id'] = choice(action_ids)
+        metrics['action_id'] = action_id
         metrics['user_id'] = user
         metrics['value'] = randint(1, 2)
         

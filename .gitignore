@@ -3,4 +3,5 @@ metrics.csv
 logs.pickle
 metrics.pickle
 kafka/data/
-
+spark/code/checkpoints/
+*__pycache__*
