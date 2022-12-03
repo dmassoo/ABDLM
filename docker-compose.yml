@@ -133,7 +133,7 @@ services:
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /code/submit_views_listener.sh
+    command: bash -c /code/submit_logs_listener.sh
     networks:
       - my-network
     volumes:
@@ -148,20 +148,20 @@ services:
         delay: 5s
         max_attempts: 3
         window: 60s
-  jupyter-notebook:
-    ports:
-      - '8888:8888'
-    image: jupyter/pyspark-notebook:latest
-    networks:
-      - my-network
-    links:
-      - my-spark-master
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 60s
+  # jupyter-notebook:
+  #   ports:
+  #     - '8888:8888'
+  #   image: jupyter/pyspark-notebook:latest
+  #   networks:
+  #     - my-network
+  #   links:
+  #     - my-spark-master
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #       delay: 5s
+  #       max_attempts: 3
+  #       window: 60s
 #      resources:
 #        limits:
 #          cpus: '0.5'

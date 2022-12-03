@@ -54,7 +54,7 @@ kafkaDF = spark \
 table = 'views'
 views = kafkaDF.select(from_json(col("value"), ccfg.metricsSchema).alias("t")) \
     .select("t.timestamp", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id", "t.value") \
-    .withWatermark("15 minutes") \
+    .withWatermark("timestamp", "15 minutes") \
     .where("t.operation_type == 'VIEW'") \
     .groupBy(window("t.timestamp", "15 minutes"), min('t.timestamp'), count().alias('views')) \
     .writeStream \
