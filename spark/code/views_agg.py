@@ -58,15 +58,16 @@ table = 'views'
 
 # .withWatermark("timestamp", "15 minutes") \
 views = kafkaDF \
-    .select(from_json(col("value"), ccfg.metricsSchema).alias('t')) \
-    .withWatermark("t.timestamp", "10 minutes")
+    .select(from_json(col("value"), ccfg.metricsSchema).alias('t'))\
+    .select("t.*")\
+    .withWatermark("timestamp", "10 minutes")
 
 print('printing kafka df typed')
 views.printSchema()
 
 
 v2 = views \
-    .select("t.timestamp") \
+    .select("timestamp") \
     .filter(views.t.operation_type == "VIEW") \
     .groupBy(
         window("timestamp", "15 minutes")
