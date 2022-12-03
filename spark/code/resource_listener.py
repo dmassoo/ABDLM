@@ -76,4 +76,4 @@ query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
             .start()\
             .awaitTermination()
 
-print("RESOURSE FINISH")
+print("RESOURCE FINISH")
