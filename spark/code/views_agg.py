@@ -58,7 +58,8 @@ table = 'views'
 
 # .withWatermark("timestamp", "15 minutes") \
 views = kafkaDF \
-    .select(from_json(col("value"), ccfg.metricsSchema).alias('t'))
+    .select(from_json(col("value"), ccfg.metricsSchema).alias('t')) \
+    .withWatermark("t.timestamp", "10 minutes")
 
 print('printing kafka df typed')
 views.printSchema()
@@ -66,14 +67,15 @@ views.printSchema()
 
 v2 = views \
     .select("t.timestamp") \
-    .filter(str.upper(views.t.operation_type) == "VIEW") \
+    .filter(views.t.operation_type == "VIEW") \
     .groupBy(
-        window(views.t.timestamp, "15 minutes")
+        window("timestamp", "15 minutes")
     ) \
     .count() \
-
-v2.printSchema()
-v2.show()
+    .writeStream \
+    .format("console") \
+    .start() \
+    .awaitTermination()
     # .writeStream \
     # .option("checkpointLocation", '/code/checkpoints/') \
     # .format("org.apache.spark.sql.cassandra") \
