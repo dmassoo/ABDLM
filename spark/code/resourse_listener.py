@@ -17,15 +17,15 @@ session.execute(f"create keyspace IF NOT EXISTS {ccfg.keyspace} with replication
                 "{'class' : 'SimpleStrategy', 'replication_factor':1}")
 session.execute(f"use {ccfg.keyspace}")
 
-topic = 'resourses'
+topic = 'resources'
 
 session.execute("""
-CREATE TABLE IF NOT EXISTS resourses (
+CREATE TABLE IF NOT EXISTS resources (
  timestamp timestamp,
  microservice_id text,
- CPU int,
- RAM int,
- PRIMARY KEY(timestamp)
+ cpu int,
+ ram int,
+ PRIMARY KEY(microservice_id)
 );""")
 
 scala_version = '2.12'
@@ -61,12 +61,12 @@ kafkaDF = spark \
 schema = StructType([
     StructField("timestamp", TimestampType(), True),
     StructField("microservice_id", StringType(), True),
-    StructField("CPU", IntegerType(), True),
-    StructField("RAM", IntegerType(), True)
+    StructField("cpu", IntegerType(), True),
+    StructField("ram", IntegerType(), True)
 ])
 
 query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
-            .select("t.timestamp", "t.microservice_id", "t.CPU", "t.RAM")\
+            .select("t.timestamp", "t.microservice_id", "t.cpu", "t.ram")\
             .writeStream\
             .option("checkpointLocation", '/code/checkpoints/')\
             .format("org.apache.spark.sql.cassandra")\

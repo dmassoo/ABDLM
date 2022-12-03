@@ -180,8 +180,8 @@ def resources():
         tmp = {}
         tmp['timestamp'] = tmp_hueta
         tmp['microservice_id'] = i
-        tmp['CPU'] = randint(50, 100)
-        tmp['RAM'] = randint(500, 8000)
+        tmp['cpu'] = randint(50, 100)
+        tmp['ram'] = randint(500, 8000)
         resource.append(tmp)
     return resource
 
