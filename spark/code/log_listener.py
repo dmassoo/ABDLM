@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS logs (
  action_id text,
  user_id text,
  value int,
- PRIMARY KEY(microservice_id, id)
+ PRIMARY KEY(action_id, id)
 );""")
 
 scala_version = '2.12'
