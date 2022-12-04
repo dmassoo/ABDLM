@@ -21,6 +21,7 @@ session.execute("""
 CREATE TABLE IF NOT EXISTS views (
  timestamp timestamp,
  views int,
+ distinct_users int,
  PRIMARY KEY(timestamp)
 );""")
 
@@ -28,6 +29,7 @@ session.execute("""
 CREATE TABLE IF NOT EXISTS transactions (
  timestamp timestamp,
  transactions int,
+ distinct_users int,
  PRIMARY KEY(timestamp)
 );""")
 
@@ -73,28 +75,30 @@ metrics.printSchema()
 
 
 views = metrics \
-    .select("timestamp") \
+    .select("timestamp", "user_id") \
     .filter(col("operation_type") == "VIEW") \
     .groupBy(
         window("timestamp", "1 minutes")
     ) \
-    .count() \
-    .select("window.start", "count") \
-    .withColumnRenamed("start", "timestamp") \
-    .withColumnRenamed("count", "views")
+    .agg(
+      count(lit(1)).alias("views"),
+      approx_count_distinct("user_id").alias('distinct_users')) \
+    .select("window.start", "views", "distinct_users") \
+    .withColumnRenamed("start", "timestamp")
 views.printSchema()
 
 transaction_events = ['VIEW', 'BUY', 'CANCEL', 'REFUND']
 transactions = metrics \
-    .select("timestamp") \
+    .select("timestamp", "user_id") \
     .filter(metrics.operation_type.isin(transaction_events)) \
     .groupBy(
         window("timestamp", "1 minutes")
     ) \
-    .count() \
-    .select("window.start", "count") \
-    .withColumnRenamed("start", "timestamp") \
-    .withColumnRenamed("count", "transactions")
+    .agg(
+      count(lit(1)).alias("transactions"),
+      approx_count_distinct("user_id").alias('distinct_users')) \
+    .select("window.start", "transactions", "distinct_users") \
+    .withColumnRenamed("start", "timestamp")
 transactions.printSchema()
 
 # Writing pre-aggregates to Cassandra
