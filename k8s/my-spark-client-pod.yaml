@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/my-network: "true"
+    io.kompose.service: my-spark-client
+  name: my-spark-client
+spec:
+  containers:
+    - args:
+        - bash
+        - -c
+        - /sh/log_listener.sh
+      image: vandosik/spark-client:latest
+      name: my-spark-client
+      resources: {}
+      volumeMounts:
+        - mountPath: /code
+          name: my-spark-client-claim0
+  restartPolicy: OnFailure
+  volumes:
+    - name: my-spark-client-claim0
+      persistentVolumeClaim:
+        claimName: my-spark-client-claim0
+status: {}
