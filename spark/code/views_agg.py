@@ -31,7 +31,7 @@ spark_version = '3.3.1'
 packages = [
     'org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1',
     'org.apache.kafka:kafka-clients:3.3.1',
-    'com.datastax.spark:spark-cassandra-connector_connector_2.12:3.1.0'
+    'com.datastax.spark:spark-cassandra-connector_connector_2.12:3.2.0'
 ]
 
 spark = SparkSession.builder \
@@ -78,21 +78,20 @@ v2 = views \
     .withColumnRenamed("count", "views")
 v2.printSchema()
 
-# query = v2.writeStream\
-#     .option("checkpointLocation", '/code/checkpoints/') \
-#     .format("org.apache.spark.sql.cassandra") \
-#     .option("keyspace", ccfg.keyspace) \
-#     .option("table", table) \
-#     .trigger(processingTime='15 seconds') \
-#     .start() \
-#     .awaitTermination()
-
 query = v2.writeStream\
-    .option("checkpointLocation", '/code/checkpoints/views/') \
-    .format("console") \
-    .outputMode("update") \
-    .format("console") \
-    .option("truncate", False) \
+    .option("checkpointLocation", '/opt/') \
+    .format("org.apache.spark.sql.cassandra") \
+    .option("keyspace", ccfg.keyspace) \
+    .option("table", table) \
     .trigger(processingTime='5 seconds') \
     .start() \
     .awaitTermination()
+
+# query = v2.writeStream\
+#     .option("checkpointLocation", '/opt/') \
+#     .outputMode("update") \
+#     .format("console") \
+#     .option("truncate", False) \
+#     .trigger(processingTime='5 seconds') \
+#     .start() \
+#     .awaitTermination()
