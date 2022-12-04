@@ -80,28 +80,6 @@ services:
         reservations:
           cpus: '0.5'
           memory: 4000M
-  # my-client:
-  #   build: ./client
-  #   links:
-  #     - my-kafka
-  #   command: bash -c "python listener.py"
-  #   #https://stackoverflow.com/questions/36249744/interactive-shell-using-docker-compose
-  #   stdin_open: true # docker run -i
-  #   tty: true        # docker run -t
-  #   volumes:
-  #     - ./client/code:/code
-  #   networks:
-  #     - my-network
-  #   image: vandosik/client:latest
-  #   depends_on:
-  #    - my-kafka
-  #    - my-cassandra
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #       delay: 5s
-  #       max_attempts: 3
-  #       window: 60s
   my-spark-master:
     image: bitnami/spark:latest
     environment:
