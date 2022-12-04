@@ -19,18 +19,16 @@ session.execute(f"use {ccfg.keyspace}")
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS views (
- id text,
  timestamp timestamp,
  views int,
- PRIMARY KEY(timestamp, id)
+ PRIMARY KEY(timestamp)
 );""")
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS transactions (
- id text,
  timestamp timestamp,
  transactions int,
- PRIMARY KEY(timestamp, id)
+ PRIMARY KEY(timestamp)
 );""")
 
 # Spark Stream from Kafka setup
@@ -56,7 +54,7 @@ kafkaDF = spark \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "my-kafka:9092") \
     .option("subscribe", topic) \
-    .option("startingOffsets", "earliest") \
+    .option("startingOffsets", "latest") \
     .option("failOnDataLoss", "false") \
     .load() \
     .selectExpr("CAST(value AS STRING)")
@@ -68,7 +66,7 @@ kafkaDF.printSchema()
 metrics = kafkaDF \
     .select(from_json(col("value"), ccfg.metricsSchema).alias('t'))\
     .select("t.*")\
-    .withWatermark("timestamp", "10 minutes")
+    .withWatermark("timestamp", "1 minutes")
 
 print('printing kafka df typed')
 metrics.printSchema()
@@ -78,7 +76,7 @@ views = metrics \
     .select("timestamp") \
     .filter(col("operation_type") == "VIEW") \
     .groupBy(
-        window("timestamp", "15 minutes")
+        window("timestamp", "1 minutes")
     ) \
     .count() \
     .select("window.start", "count") \
@@ -89,14 +87,14 @@ views.printSchema()
 transaction_events = ['VIEW', 'BUY', 'CANCEL', 'REFUND']
 transactions = metrics \
     .select("timestamp") \
-    .filter(col("operation_type") in transaction_events) \
+    .filter(metrics.operation_type.isin(transaction_events)) \
     .groupBy(
-        window("timestamp", "15 minutes")
+        window("timestamp", "1 minutes")
     ) \
     .count() \
     .select("window.start", "count") \
     .withColumnRenamed("start", "timestamp") \
-    .withColumnRenamed("count", "views")
+    .withColumnRenamed("count", "transactions")
 transactions.printSchema()
 
 # Writing pre-aggregates to Cassandra
@@ -111,11 +109,11 @@ queryViews = views.writeStream \
     .trigger(processingTime='5 seconds') \
     .start()
 
-queryTransactions = views.writeStream \
+queryTransactions = transactions.writeStream \
     .option("checkpointLocation", '/opt/transactions') \
     .format("org.apache.spark.sql.cassandra") \
     .option("keyspace", ccfg.keyspace) \
-    .option("table", table_views) \
+    .option("table", table_transactions) \
     .trigger(processingTime='5 seconds') \
     .start()
 
