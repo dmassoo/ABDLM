@@ -3,7 +3,7 @@ import kafka
 import time
 from tqdm import tqdm
 import json
-from parallel_data_generator import metrics_logs_generator, resources
+from parallel_data_generator import metrics_logs_generator, resources, MICROSERVICE_ID
 import itertools
 
 bootstrap_servers = ['my-kafka:9092']
@@ -51,8 +51,11 @@ while True:
     metrics_logs = metrics_logs_generator()
     metrics = list(itertools.chain(*metrics_logs[0]))
     logs = list(itertools.chain(*metrics_logs[1]))
+    resourse = resources()
     for i in tqdm(range(len(metrics))):
         # print("sending value = " + value)
         producer.send(topic=topic_metrics, value=metrics[i])
         producer.send(topic=topic_logs, value=logs[i])
-        producer.send(topic=topic_resources, value=resources())
+    for indx, id in enumerate(MICROSERVICE_ID):
+        # print("sending resourse: ", resourse[indx])
+        producer.send(topic=topic_resources, value=resourse[indx])
