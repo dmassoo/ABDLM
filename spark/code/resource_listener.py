@@ -68,7 +68,7 @@ schema = StructType([
 ])
 
 query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
-            .select("t.id","t.timestamp", "t.microservice_id", "t.cpu", "t.ram")\
+            .select("t.id", "t.timestamp", "t.microservice_id", "t.cpu", "t.ram")\
             .writeStream\
             .option("checkpointLocation", '/code/checkpoints/')\
             .format("org.apache.spark.sql.cassandra")\
