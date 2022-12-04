@@ -5,3 +5,11 @@ metrics.pickle
 kafka/data/
 spark/code/checkpoints/
 *__pycache__*
+spark/code/resource_listener.py
+spark/code/checkpoint/ex_1_3/..metadata.86b9c97e-46c4-4553-935d-c9bf4bdb3582.tmp.crc
+spark/code/checkpoint/ex_1_3/..metadata.801a9c15-e9a6-4850-b425-584179194f94.tmp.crc
+spark/code/checkpoint/ex_1_3/..metadata.40824dba-dae9-4f33-a0ed-5c1098fa254a.tmp.crc
+spark/code/checkpoint/ex_1_3/..metadata.acd43dfe-7f8e-424d-9343-d5e090fa919c.tmp.crc
+spark/code/checkpoint/ex_1_3/..metadata.e85d947e-5ab7-488d-9d96-a07153a2baa9.tmp.crc
+spark/code/checkpoint/ex_1_3/.metadata.crc
+spark/code/checkpoint/ex_1_3/metadata

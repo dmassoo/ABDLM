@@ -133,7 +133,7 @@ services:
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /code/submit_resources_listener.sh
+    command: bash -c /sh/log_listener.sh
     networks:
       - my-network
     volumes:
@@ -169,5 +169,3 @@ services:
 #        reservations:
 #          cpus: '0.2'
 #          memory: 256M
-
-

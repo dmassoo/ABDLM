@@ -15,6 +15,7 @@ metricsSchema = StructType([
 ])
 
 logsSchema = StructType([
+    StructField("id", StringType(), False),
     StructField("timestamp", TimestampType(), True),
     StructField("level", StringType(), True),
     StructField("microservice_id", StringType(), True),

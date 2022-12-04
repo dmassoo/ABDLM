@@ -1,6 +1,5 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
-from pyspark.sql.types import *
 from cassandra.cluster import Cluster
 import time
 import abdlm_cassandra_configs as ccfg
@@ -21,6 +20,7 @@ topic = 'logs'
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS logs (
+ id text,
  timestamp timestamp,
  level text,
  microservice_id text,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS logs (
  action_id text,
  user_id text,
  value int,
- PRIMARY KEY(action_id)
+ PRIMARY KEY(action_id, id)
 );""")
 
 scala_version = '2.12'
@@ -39,46 +39,34 @@ packages = [
     'com.datastax.spark:spark-cassandra-connector_connector_2.12:3.1.0'
 ]
 
-spark = SparkSession.builder\
-    .master("spark://my-spark-master:7077")\
-    .appName("kafka-metric-spark")\
-    .config("spark.jars.packages", ",".join(packages))\
-    .config('spark.cassandra.connection.host', ','.join(ccfg.cassandra_nodes))\
+spark = SparkSession.builder \
+    .master("spark://my-spark-master:7077") \
+    .appName("Logs App") \
+    .config("spark.jars.packages", ",".join(packages)) \
+    .config('spark.cassandra.connection.host', ','.join(ccfg.cassandra_nodes)) \
     .getOrCreate()
-
 
 print(spark)
 
-
 kafkaDF = spark \
-            .readStream \
-            .format("kafka") \
-            .option("kafka.bootstrap.servers", "my-kafka:9092") \
-            .option("subscribe", topic) \
-            .option("startingOffsets", "earliest") \
-            .option("failOnDataLoss", "false") \
-            .load() \
-            .selectExpr("CAST(value AS STRING)") 
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "my-kafka:9092") \
+    .option("subscribe", topic) \
+    .option("startingOffsets", "earliest") \
+    .option("failOnDataLoss", "false") \
+    .load() \
+    .selectExpr("CAST(value AS STRING)")
 
-
-schema = StructType([
-    StructField("timestamp", TimestampType(), True),
-    StructField("level", StringType(), True),
-    StructField("microservice_id", StringType(), True),
-    StructField("operation_type", StringType(), True),
-    StructField("action_id", StringType(), True),
-    StructField("user_id", StringType(), True)
-])
-
-query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
-            .select("t.timestamp", "t.level", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id")\
-            .writeStream\
-            .option("checkpointLocation", '/code/checkpoints/log/')\
-            .format("org.apache.spark.sql.cassandra")\
-            .option("keyspace", ccfg.keyspace)\
-            .option("table", topic)\
-            .trigger(processingTime='10 seconds') \
-            .start()\
-            .awaitTermination()
+query = kafkaDF.select(from_json(col("value"), ccfg.logsSchema).alias("t")) \
+    .select("t.id", "t.timestamp", "t.level", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id") \
+    .writeStream \
+    .option("checkpointLocation", '/code/checkpoints/log/') \
+    .format("org.apache.spark.sql.cassandra") \
+    .option("keyspace", ccfg.keyspace) \
+    .option("table", topic) \
+    .trigger(processingTime='10 seconds') \
+    .start() \
+    .awaitTermination()
 
 print("LOGS FINISH")
