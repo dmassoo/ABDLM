@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: my-cassandra
+  name: my-cassandra
+spec:
+  ports:
+    - name: "9042"
+      port: 9042
+      targetPort: 9042
+  selector:
+    io.kompose.service: my-cassandra
+status:
+  loadBalancer: {}

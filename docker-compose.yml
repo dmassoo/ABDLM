@@ -12,10 +12,6 @@ services:
     # https://stackoverflow.com/questions/36249744/interactive-shell-using-docker-compose
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    ports:
-      - "9000:9000"
-    volumes:
-      - ./generator/code:/code
     environment:
       - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_CLUSTERS_0_NAME=kraft
@@ -42,14 +38,14 @@ services:
     volumes:
       - /bitnami/kafka
     ports:
-      - "9092:9092"
+      - "9090-9092:9092"
       - "9093:9093"
     networks:
       - my-network
   my-ui:
     image: provectuslabs/kafka-ui:v0.4.0
     ports:
-      - "9090:8080"
+      - "9099:8080"
     environment:
       - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=my-kafka:9092
       - KAFKA_CLUSTERS_0_NAME=kraft
@@ -68,13 +64,14 @@ services:
   my-cassandra:
     image: cassandra:latest
     volumes:
-      - ./cassandra:/cassandra
       - /var/lib/cassandra
     networks:
       - my-network
     ports:
       - "9042:9042"
     deploy:
+      mode: replicated
+      replicas: 3
       resources:
         limits:
           cpus: '1.0'
@@ -110,32 +107,33 @@ services:
       - my-network
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 3
     ports:
+    - '8081-8090:8081'
     - '8081:8081'
-  my-spark-client:
-    build: ./spark
-    image: vandosik/spark-client:latest
-    command: bash -c /sh/submit_ddos_listener.sh
-    networks:
-      - my-network
-    volumes:
-      - ./spark/code:/code
-      - ./spark/sh:/sh
-    links:
-      - my-spark-master
-      - my-kafka
-      - my-cassandra
-    depends_on:
-      - my-spark-master
-      - my-kafka
-      - my-cassandra
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 1
-        window: 60s
+#  my-spark-client:
+#    build: ./spark
+#    image: vandosik/spark-client:latest
+#    command: bash -c /sh/submit_ddos_listener.sh
+#    networks:
+#      - my-network
+#    volumes:
+#      - ./spark/code:/code
+#      - ./spark/sh:/sh
+#    links:
+#      - my-spark-master
+#      - my-kafka
+#      - my-cassandra
+#    depends_on:
+#      - my-spark-master
+#      - my-kafka
+#      - my-cassandra
+#    deploy:
+#      restart_policy:
+#        condition: on-failure
+#        delay: 5s
+#        max_attempts: 1
+#        window: 60s
   # jupyter-notebook:
   #   ports:
   #     - '8888:8888'
@@ -157,7 +155,7 @@ services:
   #       reservations:
   #         cpus: '0.2'
   #         memory: 256M
-  grafana:
+  my-grafana:
     build: ./grafana
     image: vandosik/grafana:latest
     ports:
