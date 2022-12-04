@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3"
 networks:
   my-network:
     driver: bridge
@@ -114,11 +114,12 @@ services:
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /sh/log_listener.sh
+    command: bash -c /sh/submit_logs_listener.sh
     networks:
       - my-network
     volumes:
       - ./spark/code:/code
+      - ./spark/sh:/sh
     links:
       - my-spark-master
       - my-kafka
@@ -162,8 +163,10 @@ services:
     environment:
       GF_LOG_LEVEL: debug
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: hadesarchitect-cassandra-datasource
+    # volumes:
+    #   - ./grafana:/var/lib/grafana
     volumes:
-      - ./grafana:/var/lib/grafana
+      - /var/lib/grafana
     networks:
       - my-network
     depends_on:
