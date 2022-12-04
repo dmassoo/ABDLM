@@ -13,3 +13,5 @@ spark/code/checkpoint/ex_1_3/..metadata.acd43dfe-7f8e-424d-9343-d5e090fa919c.tmp
 spark/code/checkpoint/ex_1_3/..metadata.e85d947e-5ab7-488d-9d96-a07153a2baa9.tmp.crc
 spark/code/checkpoint/ex_1_3/.metadata.crc
 spark/code/checkpoint/ex_1_3/metadata
+grafana/grafana.db
+grafana/alerting/1/__default__.tmpl
