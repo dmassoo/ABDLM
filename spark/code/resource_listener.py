@@ -21,11 +21,12 @@ topic = 'resources'
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS resources (
+ id text,
  timestamp timestamp,
  microservice_id text,
  cpu int,
  ram int,
- PRIMARY KEY(microservice_id)
+ PRIMARY KEY(microservice_id, id)
 );""")
 
 scala_version = '2.12'
@@ -59,6 +60,7 @@ kafkaDF = spark \
 
 
 schema = StructType([
+    StructField("id", StringType(), True),
     StructField("timestamp", TimestampType(), True),
     StructField("microservice_id", StringType(), True),
     StructField("cpu", IntegerType(), True),
@@ -66,13 +68,13 @@ schema = StructType([
 ])
 
 query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
-            .select("t.timestamp", "t.microservice_id", "t.cpu", "t.ram")\
+            .select("t.id","t.timestamp", "t.microservice_id", "t.cpu", "t.ram")\
             .writeStream\
             .option("checkpointLocation", '/code/checkpoints/')\
             .format("org.apache.spark.sql.cassandra")\
             .option("keyspace", ccfg.keyspace)\
             .option("table", topic)\
-            .trigger(processingTime='10 seconds') \
+            .trigger(processingTime='2 seconds') \
             .start()\
             .awaitTermination()
 
