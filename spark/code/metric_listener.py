@@ -21,13 +21,14 @@ topic = 'metrics'
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS metrics (
+ id text,
  timestamp timestamp,
  microservice_id text,
  operation_type text,
  action_id text,
  user_id text,
  value int,
- PRIMARY KEY(action_id)
+ PRIMARY KEY((microservice_id, operation_type), id)
 );""")
 
 
@@ -61,24 +62,15 @@ kafkaDF = spark \
             .selectExpr("CAST(value AS STRING)") 
 
 
-schema = StructType([
-    StructField("timestamp", TimestampType(), True),
-    StructField("microservice_id", StringType(), True),
-    StructField("operation_type", StringType(), True),
-    StructField("action_id", StringType(), True),
-    StructField("user_id", StringType(), True),
-    StructField("value", IntegerType(), True)
-])
-
-query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
-            .select("t.timestamp", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id", "t.value")\
-            .writeStream\
-            .option("checkpointLocation", '/code/checkpoints/metric/')\
+query = kafkaDF.select(from_json(col("value"), ccfg.metricsSchema).alias("t")) \
+            .select("t.id", "t.timestamp", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id", "t.value") \
+            .writeStream \
+            .option("checkpointLocation", '/code/checkpoints/metric/') \
             .format("org.apache.spark.sql.cassandra")\
-            .option("keyspace", ccfg.keyspace)\
-            .option("table", topic)\
+            .option("keyspace", ccfg.keyspace) \
+            .option("table", topic) \
             .trigger(processingTime='10 seconds') \
-            .start()\
+            .start() \
             .awaitTermination()
 
 print("METRICS FINISH")
