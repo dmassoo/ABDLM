@@ -7,6 +7,8 @@ import marshal
 from types import FunctionType
 import time
 import multiprocessing
+import string
+import random as rnd
 
 MICROSERVICE_ID = ['e8372c50-1678-4987-8105-966238974c4e',
                    'ef7119e1-d772-421b-99c1-c3cb3105ace9',
@@ -105,6 +107,7 @@ def common_metrics_logs_per_one(user):
         logs['operation_type'] = choice(OPERATION_TYPE)
         logs['action_id'] = action_id
         logs['user_id'] = user
+        logs['message'] = ''.join(rnd.choices(string.ascii_uppercase + string.digits, k=6))
 
         metrics = {}
         metrics['id'] = str(uuid.uuid1())
@@ -132,6 +135,7 @@ def common_metrics_logs_per_one(user):
                 logs['operation_type'] = choice(OPERATION_TYPE)
                 logs['action_id'] = action_id
                 logs['user_id'] = user
+                logs['message'] = ''.join(rnd.choices(string.ascii_uppercase + string.digits, k=6))
 
                 metrics = {}
                 metrics['id'] = str(uuid.uuid1())
@@ -169,6 +173,7 @@ def dos_metrics_logs_per_one(user):
         logs['operation_type'] = choice(OPERATION_TYPE)
         logs['action_id'] = action_id
         logs['user_id'] = user
+        logs['message'] = ''.join(rnd.choices(string.ascii_uppercase + string.digits, k=6))
 
         metrics = {}
         metrics['id'] = str(uuid.uuid1())

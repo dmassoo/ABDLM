@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS metrics_ddos (
  action_id text,
  user_id text,
  count int,
- PRIMARY KEY(user_id, timestamp)
-);""")
+ PRIMARY KEY(user_id, timestamp, count)
+) WITH CLUSTERING ORDER BY (timestamp DESC, count DESC);""")
 
 scala_version = '2.12'
 spark_version = '3.3.1'
