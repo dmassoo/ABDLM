@@ -42,7 +42,7 @@ packages = [
 
 spark = SparkSession.builder\
     .master("spark://my-spark-master:7077")\
-    .appName("kafka-metric-spark")\
+    .appName("Metrics Application")\
     .config("spark.jars.packages", ",".join(packages))\
     .config('spark.cassandra.connection.host', ','.join(ccfg.cassandra_nodes))\
     .getOrCreate()
