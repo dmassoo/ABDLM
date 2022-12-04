@@ -21,6 +21,7 @@ topic = 'logs'
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS logs (
+ id text,
  timestamp timestamp,
  level text,
  microservice_id text,
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS logs (
  action_id text,
  user_id text,
  value int,
- PRIMARY KEY(action_id)
+ PRIMARY KEY(id)
 );""")
 
 scala_version = '2.12'
@@ -62,6 +63,7 @@ kafkaDF = spark \
 
 
 schema = StructType([
+    StructField("id", StringType(), True),
     StructField("timestamp", TimestampType(), True),
     StructField("level", StringType(), True),
     StructField("microservice_id", StringType(), True),
@@ -71,7 +73,7 @@ schema = StructType([
 ])
 
 query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
-            .select("t.timestamp", "t.level", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id")\
+            .select("t.id","t.timestamp", "t.level", "t.microservice_id", "t.operation_type", "t.action_id", "t.user_id")\
             .writeStream\
             .option("checkpointLocation", '/code/checkpoints/log/')\
             .format("org.apache.spark.sql.cassandra")\

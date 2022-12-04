@@ -52,10 +52,10 @@ while True:
     metrics = list(itertools.chain(*metrics_logs[0]))
     logs = list(itertools.chain(*metrics_logs[1]))
     resourse = resources()
-    for i in tqdm(range(len(metrics))):
+    # for i in tqdm(range(len(metrics))):
         # print("sending value = " + value)
-        producer.send(topic=topic_metrics, value=metrics[i])
-        producer.send(topic=topic_logs, value=logs[i])
+        # producer.send(topic=topic_metrics, value=metrics[i])
+        # producer.send(topic=topic_logs, value=logs[i])
     for indx, id in enumerate(MICROSERVICE_ID):
-        # print("sending resourse: ", resourse[indx])
+        print("sending resourse: ", resourse[indx])
         producer.send(topic=topic_resources, value=resourse[indx])

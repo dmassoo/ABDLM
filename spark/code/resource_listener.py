@@ -4,6 +4,27 @@ from pyspark.sql.types import *
 from cassandra.cluster import Cluster
 import time
 import abdlm_cassandra_configs as ccfg
+import os
+import shutil
+import glob
+
+
+checkpoint_path = "/opt/"
+
+# def remove_thing(path):
+#     if os.path.isdir(path):
+#         shutil.rmtree(path)
+#     else:
+#         os.remove(path)
+
+# def empty_directory(path):
+#     for i in glob.glob(os.path.join(path, '*')):
+#         remove_thing(i)
+
+# try:
+#     empty_directory(checkpoint_path)
+# except Exception as e:
+#     print("Exception: ", e)
 
 # Wait kafka and spark to start
 time.sleep(15)
@@ -21,11 +42,12 @@ topic = 'resources'
 
 session.execute("""
 CREATE TABLE IF NOT EXISTS resources (
+ id text,
  timestamp timestamp,
  microservice_id text,
  cpu int,
  ram int,
- PRIMARY KEY(microservice_id)
+ PRIMARY KEY((microservice_id), id)
 );""")
 
 scala_version = '2.12'
@@ -59,6 +81,7 @@ kafkaDF = spark \
 
 
 schema = StructType([
+    StructField("id",  StringType(), True),
     StructField("timestamp", TimestampType(), True),
     StructField("microservice_id", StringType(), True),
     StructField("cpu", IntegerType(), True),
@@ -66,12 +89,12 @@ schema = StructType([
 ])
 
 query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
-            .select("t.timestamp", "t.microservice_id", "t.cpu", "t.ram")\
+            .select("t.id", "t.timestamp", "t.microservice_id", "t.cpu", "t.ram")\
             .writeStream\
-            .option("checkpointLocation", '/code/checkpoints/')\
             .format("org.apache.spark.sql.cassandra")\
             .option("keyspace", ccfg.keyspace)\
             .option("table", topic)\
+            .option("checkpointLocation", checkpoint_path)\
             .trigger(processingTime='10 seconds') \
             .start()\
             .awaitTermination()

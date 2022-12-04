@@ -90,6 +90,7 @@ def common_metrics_logs_per_one(user):
         random = default_rng().uniform(size=1)
 
         logs = {}
+        logs['id'] = str(uuid.uuid1())
         logs['timestamp'] = tmp_hueta
         logs['level'] = choice(LEVEL)
         microservice_id = choice(MICROSERVICE_ID)
@@ -99,6 +100,7 @@ def common_metrics_logs_per_one(user):
         logs['user_id'] = user
 
         metrics = {}
+        metrics['id'] = str(uuid.uuid1())
         metrics['timestamp'] = tmp_hueta
         metrics['microservice_id'] = microservice_id
         metrics['operation_type'] = choice(EVENT_TYPE)
@@ -116,6 +118,7 @@ def common_metrics_logs_per_one(user):
                 dt_now=datetime.now().replace(tzinfo=timezone.utc).timestamp()
                 tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
                 logs = {}
+                logs['id'] = str(uuid.uuid1())
                 logs['timestamp'] = tmp_hueta
                 logs['level'] = choice(LEVEL)
                 logs['microservice_id'] = microservice_id
@@ -124,6 +127,7 @@ def common_metrics_logs_per_one(user):
                 logs['user_id'] = user
                 
                 metrics = {}
+                metrics['id'] = str(uuid.uuid1())
                 metrics['timestamp'] = tmp_hueta
                 metrics['microservice_id'] = microservice_id
                 metrics['operation_type'] = choice(EVENT_TYPE)
@@ -153,6 +157,7 @@ def dos_metrics_logs_per_one(user):
         tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
         
         logs = {}
+        logs['id'] = str(uuid.uuid1())
         logs['timestamp'] = tmp_hueta
         logs['level'] = choice(LEVEL)
         logs['microservice_id'] = choice(MICROSERVICE_ID)
@@ -161,6 +166,7 @@ def dos_metrics_logs_per_one(user):
         logs['user_id'] = user
 
         metrics = {}
+        metrics['id'] = str(uuid.uuid1())
         metrics['timestamp'] = tmp_hueta
         metrics['microservice_id'] = choice(MICROSERVICE_ID)
         metrics['operation_type'] = choice(EVENT_TYPE)
@@ -178,6 +184,7 @@ def resources():
     tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
     for i in MICROSERVICE_ID:
         tmp = {}
+        tmp['id'] = str(uuid.uuid1())
         tmp['timestamp'] = tmp_hueta
         tmp['microservice_id'] = i
         tmp['cpu'] = randint(50, 100)
