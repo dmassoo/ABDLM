@@ -1,0 +1,44 @@
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "community",
+  "signedByOrg": "hadesarchitect",
+  "signedByOrgName": "hadesarchitect",
+  "rootUrls": [],
+  "plugin": "hadesarchitect-cassandra-datasource",
+  "version": "2.2.1",
+  "time": 1664226335541,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "cassandra-plugin_windows_amd64.exe": "c60d5f6cb77254a63fdc54b9ff5298e4bb8d60f562e7d3d2169cd24eaaeb19e9",
+    "LICENSE": "65b6092f1f311c776118c0f039b6ec8928931af9f3bc15ea493ecce87d1fa5ab",
+    "module.js": "d7e74c9786bbce6964ecac4a28d8cb6896a6d20af569f8dc3c875a63e8b2545e",
+    "module.js.map": "d127ffda8ca1c35ad9cbadc0da48ea6481f0789f8befd9916a7c4702e778fa8a",
+    "README.md": "dc26ca00eaba729087a33902ef4b55c65feec34d0fbd005f2e9cdda1be0723a9",
+    "cassandra-plugin_linux_arm64": "09253a40596e9c44f5b30ac3dd6a496778e7ef5fbe8a435ad56f835be9ee0376",
+    "CHANGELOG.md": "46686bd06ebf2d13d7b7ed61e60136c3a5c311d3cba6713e2c08c3185cc951ec",
+    "img/config.png": "d2a46c0dd65bdaf57d8b33cf8c103b46234518f2b87f140fa7b274dcbc74427f",
+    "img/configurator.png": "c2365b4738d59a3883917af2bc17f0933ec888d1ac19f28cc216bdb67f05a01c",
+    "img/suggestions.png": "be30abcce0f41a6b8a1c3f0d845f8a51b95631dff91a83743b1cd19f45d3de07",
+    "img/cassandra.svg": "5949151e09765f7d8cbbfcdd1589d396ec35abaa5a2965b8a428f610a755f047",
+    "img/editor.png": "c193ac6791a1fd73d64fdd3f33a9cbd4fcc1f19d19be8f2346ff953946d5da36",
+    "cassandra-plugin_darwin_amd64": "0b8b1077557fa3e41697b0bcd741ba0850cf1da5a6367fcd01ce15fd55bc6598",
+    "module.js.LICENSE.txt": "cdf963ced7d25a0f98901a547647b4d6e2dbe0197fd78c87a059a87b0e542fe2",
+    "cassandra-plugin_linux_amd64": "3006de5079b1384e1eb74fc09ff71a90bb79bec35d6f57dfa342f79acd4469ce",
+    "plugin.json": "51d373ba87434d72bb68af749ba6c73d47f1a4b15f73fdc3bb7ac8f1d1ff8d84"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v4.10.10
+Comment: https://openpgpjs.org
+
+wrkEARMKAAYFAmMyFB8AIQkQfk0ManCIZucWIQTzOyW2kQdOhGNlcPN+TQxq
+cIhm5+/3AgkBkvNFjEcKLE8wJi1TKoCOiZaXFNaU6vHTwKLegiMoWQN6Dibv
+tjsIB8Kw5Nkn4ESJMVc+PCKnjbiN+c3zos1Y2aUCCQHRO9muK3GpTJUMKNFG
+k8zDMEfBopmM85OvJzKdlHY2YDEKlYlFhYV0NTGGvnDd6CW/m5Zk8aasUxE3
+UXqRMmK+YA==
+=ORPo
+-----END PGP SIGNATURE-----

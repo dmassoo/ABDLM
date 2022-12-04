@@ -1,8 +1,0 @@
-./bin/spark-submit \
-  --master spark://my-spark-master:7077 \
-  --deploy-mode standalone \
-  --conf <key<=<value> \
-  --driver-memory 1g \
-  --executor-memory 3g \
-  --executor-cores 2  \
-  --py-files metric_listener.py
