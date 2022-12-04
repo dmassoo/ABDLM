@@ -37,8 +37,10 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@my-kafka:9093
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_KRAFT_CLUSTER_ID=L0ZEQh1yTbGhNNUE7-6wSQ
+    # volumes:
+    #   - ./kafka:/bitnami/kafka
     volumes:
-      - ./kafka:/bitnami/kafka
+      - /bitnami/kafka
     ports:
       - "9092:9092"
       - "9093:9093"
