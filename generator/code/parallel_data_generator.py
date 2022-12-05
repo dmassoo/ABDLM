@@ -1,4 +1,5 @@
 from numpy.random import choice, randint, default_rng
+import numpy as np
 import uuid
 from datetime import datetime, timezone
 from tqdm import tqdm
@@ -92,8 +93,13 @@ def common_metrics_logs_per_one(user):
     user_logs = []
     action_id = str(uuid.uuid4())
     # user = choice(user_db)
-    for _ in range(randint(1, 30)):
-        time.sleep(0.5)
+    randomActionNum = rnd.normalvariate(mu=13, sigma=8)
+    randomActionInt = int(np.abs(np.round(randomActionNum)))
+    # print(randomActionInt)
+    for _ in range(randomActionInt):
+        timeBetweenActions = np.abs(rnd.normalvariate(mu=0.45, sigma=0.3)) # 0.4 is considered avg time between actions
+        # print(timeBetweenActions)
+        time.sleep(timeBetweenActions)
         dt_now = datetime.now().replace(tzinfo=timezone.utc).timestamp()
         tmp_hueta = datetime.fromtimestamp(dt_now).strftime('%Y-%m-%d %H:%M:%S')
         random = default_rng().uniform(size=1)

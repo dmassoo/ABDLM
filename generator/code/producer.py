@@ -57,5 +57,5 @@ while True:
         producer.send(topic=topic_metrics, value=metrics[i])
         producer.send(topic=topic_logs, value=logs[i])
     for indx, id in enumerate(MICROSERVICE_ID):
-        print("sending resourse: ", resourse[indx])
+        # print("sending resourse: ", resourse[indx])
         producer.send(topic=topic_resources, value=resourse[indx])
