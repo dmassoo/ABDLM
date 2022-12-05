@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS metrics_ddos (
  action_id text,
  user_id text,
  count int,
+ dummy_id text,
  PRIMARY KEY(user_id, timestamp, count)
 ) WITH CLUSTERING ORDER BY (timestamp DESC, count DESC);""")
 
@@ -50,7 +51,7 @@ kafkaDF = spark \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "my-kafka:9092") \
     .option("subscribe", topic) \
-    .option("startingOffsets", "earliest") \
+    .option("startingOffsets", "latest") \
     .option("failOnDataLoss", "false") \
     .load() \
     .selectExpr("CAST(value AS STRING)")
@@ -70,6 +71,7 @@ query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
             .count() \
             .select("window.start", "action_id", "user_id", "count")\
             .withColumnRenamed("start", "timestamp")\
+            .withColumn("dummy_id", lit("1"))\
             .writeStream \
             .format("org.apache.spark.sql.cassandra") \
             .option("keyspace", ccfg.keyspace)\

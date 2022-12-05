@@ -53,7 +53,7 @@ kafkaDF = spark \
             .format("kafka") \
             .option("kafka.bootstrap.servers", "my-kafka:9092") \
             .option("subscribe", topic) \
-            .option("startingOffsets", "earliest") \
+            .option("startingOffsets", "latest") \
             .option("failOnDataLoss", "false") \
             .load() \
             .selectExpr("CAST(value AS STRING)") 

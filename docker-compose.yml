@@ -116,7 +116,7 @@ services:
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /sh/submit_views_listener.sh
+    command: bash -c /sh/submit_ddos_listener.sh
     networks:
       - my-network
     volumes:
