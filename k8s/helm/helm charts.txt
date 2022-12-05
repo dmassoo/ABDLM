@@ -4,5 +4,8 @@ helm install my-cassandra bitnami/cassandra --set dbUser.user=admin,dbUser.passw
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install my-spark bitnami/spark --set master.extraEnvVarsCM=sparkCM,worker.extraEnvVarsCM=sparkCM
 
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-kafka bitnami/kafka
+
 helm repo add my-repo https://charts.bitnami.com/bitnami
 helm install my-minio bitnami/minio
