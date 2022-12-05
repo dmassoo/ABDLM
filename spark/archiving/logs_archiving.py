@@ -38,6 +38,8 @@ logs_table = 'logs'
 day_month_ago = (datetime.today() - relativedelta(months=1)).date()
 
 cassandra_logs = spark.read.format("org.apache.spark.sql.cassandra") \
+    .option("spark.cassandra.auth.password", ) \
+    .option("spark.cassandra.auth.username", ) \
     .option("keyspace", ccfg.keyspace) \
     .option("table", logs_table) \
     .filter(col("timestamp").date() == day_month_ago) \

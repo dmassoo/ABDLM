@@ -1,0 +1,40 @@
+C:\Users\Dmitrii>helm install my-release bitnami/cassandra
+NAME: my-release
+LAST DEPLOYED: Mon Dec  5 02:32:12 2022
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+CHART NAME: cassandra
+CHART VERSION: 9.7.6
+APP VERSION: 4.0.7** Please be patient while the chart is being deployed **
+
+Cassandra can be accessed through the following URLs from within the cluster:
+
+  - CQL: my-release-cassandra.default.svc.cluster.local:9042
+
+To get your password run:
+
+   export CASSANDRA_PASSWORD=$(kubectl get secret --namespace "default" my-release-cassandra -o jsonpath="{.data.cassandra-password}" | base64 -d)
+
+Check the cluster status by running:
+
+   kubectl exec -it --namespace default $(kubectl get pods --namespace default -l app.kubernetes.io/name=cassandra,app.kubernetes.io/instance=my-release -o jsonpath='{.items[0].metadata.name}') nodetool status
+
+To connect to your Cassandra cluster using CQL:
+
+1. Run a Cassandra pod that you can use as a client:
+
+   kubectl run --namespace default my-release-cassandra-client --rm --tty -i --restart='Never' \
+   --env CASSANDRA_PASSWORD=$CASSANDRA_PASSWORD \
+    \
+   --image docker.io/bitnami/cassandra:4.0.7-debian-11-r13 -- bash
+
+2. Connect using the cqlsh client:
+
+   cqlsh -u cassandra -p $CASSANDRA_PASSWORD my-release-cassandra
+
+To connect to your database from outside the cluster execute the following commands:
+
+   kubectl port-forward --namespace default svc/my-release-cassandra 9042:9042 & cqlsh -u cassandra -p $CASSANDRA_PASSWORD 127.0.0.1 9042
