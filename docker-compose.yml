@@ -29,8 +29,6 @@ services:
     # https://stackoverflow.com/questions/36249744/interactive-shell-using-docker-compose
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    ports:
-      - "9000:9000"
     volumes:
       - ./generator/code:/code
     environment:
@@ -117,8 +115,8 @@ services:
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://my-spark-master:7077
-      - SPARK_WORKER_MEMORY=5G
-      - SPARK_WORKER_CORES=5
+      - SPARK_WORKER_MEMORY=3G
+      - SPARK_WORKER_CORES=3
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
@@ -127,9 +125,9 @@ services:
       - my-network
     deploy:
       mode: replicated
-      replicas: 1
-    ports:
-    - '8081:8081'
+      replicas: 2
+    # ports:
+    # - '8081:8081'
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
@@ -139,6 +137,7 @@ services:
     volumes:
       - ./spark/code:/code
       - ./spark/sh:/sh
+      - ./spark/archiving:/archiving
     links:
       - my-spark-master
       - my-kafka

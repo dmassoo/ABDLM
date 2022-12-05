@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from cassandra.cluster import Cluster
 import time
-import spark.code.abdlm_cassandra_configs as ccfg
+import abdlm_cassandra_configs as ccfg
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from minio import Minio
@@ -11,7 +11,7 @@ from minio import Minio
 time.sleep(15)
 
 # Attach to cassandra
-cluster = Cluster(ccfg.cassandra_nodes, port=ccfg.cassandra_port,)
+cluster = Cluster(['my-cassandra'], port=9042)
 session = cluster.connect()
 
 # Initialize keyspace abd table
