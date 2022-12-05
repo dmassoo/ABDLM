@@ -37,8 +37,9 @@ day_month_ago = (datetime.today() - relativedelta(months=1)).date()
 cassandra_logs = spark.read.format("org.apache.spark.sql.cassandra") \
     .option("keyspace", ccfg.keyspace) \
     .option("table", logs_table) \
-    .filter(col("timestamp").date() == day_month_ago) \
-    .load
+    .load() \
+    .filter(col("timestamp").date() == day_month_ago)
+
 
 cassandra_logs.printSchema()
 print("===================")
@@ -50,8 +51,8 @@ cassandra_logs.to_orc('%s' % filePath, mode='overwrite')
 cassandra_metrics = spark.read.format("org.apache.spark.sql.cassandra") \
     .option("keyspace", ccfg.keyspace) \
     .option("table", metrics_table) \
-    .filter(col("timestamp").date() == day_month_ago) \
-    .load
+    .load() \
+    .filter(col("timestamp").date() == day_month_ago)
 
 cassandra_metrics.printSchema()
 print("===================")
