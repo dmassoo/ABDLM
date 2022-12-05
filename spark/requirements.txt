@@ -2,3 +2,5 @@ py4j==0.10.9.5
 cassandra-driver
 kafka-python
 # pyspark
+python-dateutil
+minio
