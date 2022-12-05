@@ -1,13 +1,14 @@
 from minio import Minio
 from minio.error import S3Error
 
-
+# demo for minio
 def main():
 
+    # todo create and add your keys
     client = Minio(
         "localhost:9000",
-        access_key="l6CPm5vh0J4DK1Nh",
-        secret_key="ghJRtiUA66Neue45dpGArb7FEBIx3AtB",
+        access_key="Qmb3toLFm8Ev3nPp",
+        secret_key="TU4S2gnDJkyZUWMM6TDl8gQmtbDEVJR2",
         secure=False
     )
 
@@ -23,10 +24,7 @@ def main():
     client.fput_object(
         "abdlm", "example.ork", "example.orc",
     )
-    # print(
-    #     "'/home/user/Photos/asiaphotos.zip' is successfully uploaded as "
-    #     "object 'asiaphotos-2015.zip' to bucket 'asiatrip'."
-    # )
+    print(f"File is loaded successfully")
 
 
 if __name__ == "__main__":
