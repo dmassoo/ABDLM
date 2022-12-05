@@ -100,8 +100,8 @@ services:
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://my-spark-master:7077
-      - SPARK_WORKER_MEMORY=1G
-      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=5G
+      - SPARK_WORKER_CORES=5
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
@@ -116,7 +116,7 @@ services:
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /sh/submit_ddos_listener.sh
+    command: bash -c /sh/start_listeners.sh
     networks:
       - my-network
     volumes:
