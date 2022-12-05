@@ -16,7 +16,7 @@ Cassandra can be accessed through the following URLs from within the cluster:
 
 To get your password run:
 
-   export CASSANDRA_PASSWORD=$(kubectl get secret --namespace "default" my-release-cassandra -o jsonpath="{.data.cassandra-password}" | base64 -d)
+export CASSANDRA_PASSWORD=$(kubectl get secret --namespace "default" my-release-cassandra -o jsonpath="{.data.cassandra-password}" | base64 -d)
 
 Check the cluster status by running:
 
@@ -33,8 +33,8 @@ To connect to your Cassandra cluster using CQL:
 
 2. Connect using the cqlsh client:
 
-   cqlsh -u cassandra -p $CASSANDRA_PASSWORD my-release-cassandra
+cqlsh -u cassandra -p $CASSANDRA_PASSWORD my-cassandra
 
 To connect to your database from outside the cluster execute the following commands:
 
-   kubectl port-forward --namespace default svc/my-release-cassandra 9042:9042 & cqlsh -u cassandra -p $CASSANDRA_PASSWORD 127.0.0.1 9042
+kubectl port-forward --namespace default svc/my-cassandra 9042:9042 & cqlsh -u cassandra -p $CASSANDRA_PASSWORD 127.0.0.1 9042

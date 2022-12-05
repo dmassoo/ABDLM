@@ -1,8 +1,0 @@
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install my-cassandra bitnami/cassandra
-
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install my-spark bitnami/spark
-
-helm repo add my-repo https://charts.bitnami.com/bitnami
-helm install my-release my-repo/minio

@@ -9,7 +9,8 @@ from pyspark.sql.types import *
 time.sleep(15)
 
 # Attach to cassandra
-cluster = Cluster(['my-cassandra'], port=9042)
+cluster = Cluster(ccfg.cassandra_nodes, port=ccfg.cassandra_port,
+                  protocol_version=1, auth_provider=ccfg.getCassandraCredential())
 session = cluster.connect()
 
 # Initialize keyspace abd table
@@ -38,7 +39,7 @@ packages = [
 
 spark = SparkSession.builder \
     .master("spark://my-spark-master:7077") \
-    .appName("kafka-metric-spark") \
+    .appName("DDOS Detect App") \
     .config("spark.jars.packages", ",".join(packages)) \
     .config('spark.cassandra.connection.host', ','.join(ccfg.cassandra_nodes)) \
     .getOrCreate()
@@ -48,7 +49,7 @@ print(spark)
 kafkaDF = spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "my-kafka:9092") \
+    .option("kafka.bootstrap.servers", ccfg.kafka_bootstrap_servers) \
     .option("subscribe", topic) \
     .option("startingOffsets", "earliest") \
     .option("failOnDataLoss", "false") \
@@ -72,6 +73,8 @@ query = kafkaDF.select(from_json(col("value"), schema).alias("t")) \
             .withColumnRenamed("start", "timestamp")\
             .writeStream \
             .format("org.apache.spark.sql.cassandra") \
+            .option("spark.cassandra.auth.password", ccfg.cassandra_user) \
+            .option("spark.cassandra.auth.password", ccfg.cassandra_password) \
             .option("keyspace", ccfg.keyspace)\
             .option("table", 'metrics_ddos') \
             .option("checkpointLocation", '/opt/checkpoints/ddos/') \

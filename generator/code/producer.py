@@ -1,12 +1,11 @@
 import kafka
-# from kafka import KafkaProducer
 import time
 from tqdm import tqdm
 import json
 from parallel_data_generator import metrics_logs_generator, resources, MICROSERVICE_ID
 import itertools
-
-bootstrap_servers = ['my-kafka:9092']
+from spark.code import abdlm_cassandra_configs as ccfg
+bootstrap_servers = [ccfg.kafka_bootstrap_servers]
 
 
 def attach_producer() -> kafka.KafkaProducer:

@@ -6,13 +6,13 @@ metadata:
     kompose.version: 1.27.0 (b0ed6a2c9)
   creationTimestamp: null
   labels:
-    io.kompose.service: data-generator
-  name: data-generator
+    io.kompose.service: my-kafka-ui
+  name: my-kafka-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: data-generator
+      io.kompose.service: my-kafka-ui
   strategy: {}
   template:
     metadata:
@@ -21,23 +21,22 @@ spec:
         kompose.version: 1.27.0 (b0ed6a2c9)
       creationTimestamp: null
       labels:
-        io.kompose.network/my-network: "true"
-        io.kompose.service: data-generator
+        io.kompose.service: my-kafka-ui
     spec:
       containers:
-        - args:
-            - bash
-            - -c
-            - python producer.py
-          env:
+        - env:
             - name: KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS
-              value: kafka:9092
-            - name: KAFKA_CLUSTERS_0_NAME
-              value: kraft
-          image: vandosik/generator:latest
-          name: data-generator
-          resources: {}
-          stdin: true
-          tty: true
+              value: my-release-kafka-0.my-release-kafka-headless.default.svc.cluster.local:9092
+          image: provectuslabs/kafka-ui:v0.4.0
+          name: my-kafka-ui
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: "536870912"
+            requests:
+              cpu: 200m
+              memory: "268435456"
       restartPolicy: Always
 status: {}

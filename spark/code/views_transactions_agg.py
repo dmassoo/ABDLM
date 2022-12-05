@@ -9,7 +9,8 @@ import abdlm_cassandra_configs as ccfg
 time.sleep(15)
 
 # Attach to cassandra
-cluster = Cluster(['my-cassandra'], port=9042)
+cluster = Cluster(ccfg.cassandra_nodes, port=ccfg.cassandra_port,
+                  protocol_version=1, auth_provider=ccfg.getCassandraCredential())
 session = cluster.connect()
 
 # Initialize keyspace and tables
@@ -52,7 +53,7 @@ topic = 'metrics'
 kafkaDF = spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "my-kafka:9092") \
+    .option("kafka.bootstrap.servers", ccfg.kafka_bootstrap_servers) \
     .option("subscribe", topic) \
     .option("startingOffsets", "latest") \
     .option("failOnDataLoss", "false") \
@@ -104,6 +105,8 @@ table_transactions = 'transactions'
 queryViews = views.writeStream \
     .option("checkpointLocation", '/opt/views') \
     .format("org.apache.spark.sql.cassandra") \
+    .option("spark.cassandra.auth.password", ccfg.cassandra_user) \
+    .option("spark.cassandra.auth.password", ccfg.cassandra_password) \
     .option("keyspace", ccfg.keyspace) \
     .option("table", table_views) \
     .trigger(processingTime='5 seconds') \
@@ -112,6 +115,8 @@ queryViews = views.writeStream \
 queryTransactions = transactions.writeStream \
     .option("checkpointLocation", '/opt/transactions') \
     .format("org.apache.spark.sql.cassandra") \
+    .option("spark.cassandra.auth.password", ccfg.cassandra_user) \
+    .option("spark.cassandra.auth.password", ccfg.cassandra_password) \
     .option("keyspace", ccfg.keyspace) \
     .option("table", table_transactions) \
     .trigger(processingTime='5 seconds') \

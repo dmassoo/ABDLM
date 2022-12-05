@@ -8,3 +8,4 @@ COPY code .
 RUN pip install -r requirements.txt
 # EXPOSE 5000
 RUN echo "FINISH configuring container!"
+CMD [ "sh", "-c", "python /code/producer.py"]
