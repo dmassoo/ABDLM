@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS views (
  timestamp timestamp,
  views int,
  distinct_users int,
+ dummy_id text,
  PRIMARY KEY(timestamp)
 );""")
 
@@ -30,6 +31,7 @@ CREATE TABLE IF NOT EXISTS transactions (
  timestamp timestamp,
  transactions int,
  distinct_users int,
+ dummy_id text,
  PRIMARY KEY(timestamp)
 );""")
 
@@ -84,7 +86,8 @@ views = metrics \
       count(lit(1)).alias("views"),
       approx_count_distinct("user_id").alias('distinct_users')) \
     .select("window.start", "views", "distinct_users") \
-    .withColumnRenamed("start", "timestamp")
+    .withColumnRenamed("start", "timestamp") \
+    .withColumn("dummy_id", lit("1"))
 views.printSchema()
 
 transaction_events = ['VIEW', 'BUY', 'CANCEL', 'REFUND']
@@ -98,7 +101,8 @@ transactions = metrics \
       count(lit(1)).alias("transactions"),
       approx_count_distinct("user_id").alias('distinct_users')) \
     .select("window.start", "transactions", "distinct_users") \
-    .withColumnRenamed("start", "timestamp")
+    .withColumnRenamed("start", "timestamp") \
+    .withColumn("dummy_id", lit("1"))
 transactions.printSchema()
 
 # Writing pre-aggregates to Cassandra
