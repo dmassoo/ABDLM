@@ -26,7 +26,7 @@ spec:
       containers:
         - env:
             - name: KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS
-              value: my-release-kafka-0.my-release-kafka-headless.default.svc.cluster.local:9092
+              value: my-kafka-0.my-kafka-headless.default.svc.cluster.local:9092
           image: provectuslabs/kafka-ui:v0.4.0
           name: my-kafka-ui
           ports:

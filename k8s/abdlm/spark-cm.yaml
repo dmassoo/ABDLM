@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-cm
+data:
+  KAFKA_BOOTSTRAP_SERVERS: my-kafka-0.my-kafka-headless.default.svc.cluster.local:9092
+  CASSANDRA_NODES: my-cassandra.default.svc.cluster.local
+  CASSANDRA_PORT: '9042'
+  CASSANDRA_USER: admin
+  CASSANDRA_PASSWORD: password

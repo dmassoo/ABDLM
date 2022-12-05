@@ -5,7 +5,7 @@ import json
 from parallel_data_generator import metrics_logs_generator, resources, MICROSERVICE_ID
 import itertools
 from spark.code import abdlm_cassandra_configs as ccfg
-bootstrap_servers = [ccfg.kafka_bootstrap_servers]
+bootstrap_servers = ["my-kafka-0.my-kafka-headless.default.svc.cluster.local:9092"]
 
 
 def attach_producer() -> kafka.KafkaProducer:
