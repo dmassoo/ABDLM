@@ -39,11 +39,13 @@ packages = [
     'com.datastax.spark:spark-cassandra-connector_connector_2.12:3.1.0'
 ]
 
+
 spark = SparkSession.builder \
     .master("spark://my-spark-master:7077") \
     .appName("Logs App") \
     .config("spark.jars.packages", ",".join(packages)) \
     .config('spark.cassandra.connection.host', ','.join(ccfg.cassandra_nodes)) \
+    .config('spark.cassandra.output.ttl', ccfg.ttl) \
     .getOrCreate()
 
 print(spark)

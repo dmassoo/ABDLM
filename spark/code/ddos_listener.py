@@ -42,6 +42,7 @@ spark = SparkSession.builder \
     .appName("DDOS Application") \
     .config("spark.jars.packages", ",".join(packages)) \
     .config('spark.cassandra.connection.host', ','.join(ccfg.cassandra_nodes)) \
+    .config('spark.cassandra.output.ttl', ccfg.ttl) \
     .getOrCreate()
 
 print(spark)
