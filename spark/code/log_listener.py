@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS logs (
  operation_type text,
  action_id text,
  user_id text,
- value int,
+ message text,
  PRIMARY KEY(action_id, id)
 );""")
 
