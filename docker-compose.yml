@@ -1,8 +1,4 @@
 version: "3.7"
-networks:
-  my-network:
-    driver: bridge
-
 # Settings and configurations that are common for all containers
 x-minio-common: &minio-common
   image: quay.io/minio/minio:RELEASE.2022-12-02T19-19-22Z
@@ -34,8 +30,6 @@ services:
     environment:
       - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_CLUSTERS_0_NAME=kraft
-    networks:
-      - my-network
     image: vandosik/generator:latest
     depends_on:
      - my-kafka
@@ -59,8 +53,6 @@ services:
     ports:
       - "9092:9092"
       - "9093:9093"
-    networks:
-      - my-network
   my-ui:
     image: provectuslabs/kafka-ui:v0.4.0
     ports:
@@ -68,8 +60,6 @@ services:
     environment:
       - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=my-kafka:9092
       - KAFKA_CLUSTERS_0_NAME=kraft
-    networks:
-      - my-network
     depends_on:
      - my-kafka
     deploy:
@@ -85,8 +75,6 @@ services:
     volumes:
       - ./cassandra:/cassandra
       - /var/lib/cassandra
-    networks:
-      - my-network
     ports:
       - "9042:9042"
     deploy:
@@ -108,8 +96,6 @@ services:
     ports:
       - '8080:8080'
       - '7077:7077'
-    networks:
-      - my-network
   my-spark-worker:
     image: bitnami/spark:latest
     environment:
@@ -121,8 +107,6 @@ services:
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
-    networks:
-      - my-network
     deploy:
       mode: replicated
       replicas: 2
@@ -131,13 +115,10 @@ services:
   my-spark-client:
     build: ./spark
     image: vandosik/spark-client:latest
-    command: bash -c /sh/start_listeners.sh
-    networks:
-      - my-network
+    command: bash -c /sh/submit_archiving.sh
     volumes:
       - ./spark/code:/code
       - ./spark/sh:/sh
-      - ./spark/archiving:/archiving
     links:
       - my-spark-master
       - my-kafka
@@ -185,8 +166,6 @@ services:
     #   - ./grafana:/var/lib/grafana
     volumes:
       - /var/lib/grafana
-    networks:
-      - my-network
     depends_on:
       - my-cassandra
 
