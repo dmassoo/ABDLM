@@ -4,8 +4,8 @@ from pyspark.sql.types import *
 keyspace = 'abdlm'
 cassandra_nodes = ['my-cassandra:9042']
 ttl = 2640000
-minio_key = '9kBDzKLqEqdEvEK8'
-minio_secret = 'Lvzge87J0adLeDTZHNG4QIM93jUpRyOm'
+minio_key = 'SSERD6wBYSjm5azl'
+minio_secret = 'RoJSgEXZPdHhr392mIv6lyda9fZx2kDk'
 
 metricsSchema = StructType([
     StructField("id", StringType(), False),
